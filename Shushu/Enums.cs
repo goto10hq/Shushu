@@ -70,7 +70,8 @@
             Flag6 = 606,
             Flag7 = 607,
             Flag8 = 608,
-            Flag9 = 609            
+            Flag9 = 609,
+            Point0 = 700
         }
     }
 }
