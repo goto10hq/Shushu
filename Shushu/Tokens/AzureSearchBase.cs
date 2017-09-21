@@ -13,19 +13,18 @@ namespace Shushu.Tokens
 
         [IsFilterable]
         public string Entity { get; set; }
-
-        [IsFilterable]
-        public string Index { get; set; }
-
-        [IsSearchable]        
-        [Analyzer("standardasciifolding.lucene")]        
-        public string Title { get; set; }
-        
+                
         [IsSearchable]
         [IsSortable]
         [Analyzer("standardasciifolding.lucene")]
         [IsFilterable]        
-        public string Text { get; set; }
+        public string Text0 { get; set; }
+
+        [IsSearchable]
+        [IsSortable]
+        [Analyzer("standardasciifolding.lucene")]
+        [IsFilterable]        
+        public string Text1 { get; set; }
 
         [IsSearchable]
         [IsSortable]
@@ -41,14 +40,14 @@ namespace Shushu.Tokens
 
         [IsSearchable]
         [IsSortable]
-        [Analyzer("standardasciifolding.lucene")]
+        [Analyzer("standardasciifolding.lucene")]        
         [IsFilterable]        
         public string Text4 { get; set; }
 
         [IsSearchable]
         [IsSortable]
-        [Analyzer("standardasciifolding.lucene")]        
-        [IsFilterable]        
+        [Analyzer("standardasciifolding.lucene")]
+        [IsFilterable]
         public string Text5 { get; set; }
 
         [IsSearchable]
@@ -76,13 +75,74 @@ namespace Shushu.Tokens
         public string Text9 { get; set; }
 
         [IsSearchable]
+        [IsSortable]
+        [Analyzer("standardasciifolding.lucene")]
         [IsFilterable]
-        public string Slug { get; set; }
+        public string Text10 { get; set; }
+
+        [IsSearchable]
+        [IsSortable]
+        [Analyzer("standardasciifolding.lucene")]
+        [IsFilterable]
+        public string Text11 { get; set; }
+
+        [IsSearchable]
+        [IsSortable]
+        [Analyzer("standardasciifolding.lucene")]
+        [IsFilterable]
+        public string Text12 { get; set; }
+
+        [IsSearchable]
+        [IsSortable]
+        [Analyzer("standardasciifolding.lucene")]
+        [IsFilterable]
+        public string Text13 { get; set; }
+
+        [IsSearchable]
+        [IsSortable]
+        [Analyzer("standardasciifolding.lucene")]
+        [IsFilterable]
+        public string Text14 { get; set; }
+
+        [IsSearchable]
+        [IsSortable]
+        [Analyzer("standardasciifolding.lucene")]
+        [IsFilterable]
+        public string Text15 { get; set; }
+
+        [IsSearchable]
+        [IsSortable]
+        [Analyzer("standardasciifolding.lucene")]
+        [IsFilterable]
+        public string Text16 { get; set; }
+
+        [IsSearchable]
+        [IsSortable]
+        [Analyzer("standardasciifolding.lucene")]
+        [IsFilterable]
+        public string Text17 { get; set; }
+
+        [IsSearchable]
+        [IsSortable]
+        [Analyzer("standardasciifolding.lucene")]
+        [IsFilterable]
+        public string Text18 { get; set; }
+
+        [IsSearchable]
+        [IsSortable]
+        [Analyzer("standardasciifolding.lucene")]
+        [IsFilterable]
+        public string Text19 { get; set; }
 
         [IsSortable]
         [IsFilterable]
         [IsFacetable]
-        public DateTimeOffset? Date { get; set; }
+        public DateTimeOffset? Date0 { get; set; }
+
+        [IsSortable]
+        [IsFilterable]
+        [IsFacetable]
+        public DateTimeOffset? Date1 { get; set; }
 
         [IsSortable]
         [IsFilterable]
@@ -98,16 +158,16 @@ namespace Shushu.Tokens
         [IsFilterable]
         [IsFacetable]
         public DateTimeOffset? Date4 { get; set; }
-
-        [IsSortable]
+        
+        [IsSearchable]
         [IsFilterable]
         [IsFacetable]
-        public DateTimeOffset? Date5 { get; set; }
+        public List<string> Tags0 { get; set; }
 
         [IsSearchable]
         [IsFilterable]
         [IsFacetable]
-        public List<string> Tags { get; set; }
+        public List<string> Tags1 { get; set; }
 
         [IsSearchable]
         [IsFilterable]
@@ -152,7 +212,12 @@ namespace Shushu.Tokens
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public int? Number { get; set; }
+        public int? Number0 { get; set; }
+
+        [IsFilterable]
+        [IsSortable]
+        [IsFacetable]
+        public int? Number1 { get; set; }
 
         [IsFilterable]
         [IsSortable]
@@ -197,31 +262,60 @@ namespace Shushu.Tokens
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public double? Money { get; set; }
+        public decimal? Decimal0 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public double? Money2 { get; set; }
+        public decimal? Decimal1 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public double? Money3 { get; set; }
+        public decimal? Decimal2 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public double? Money4 { get; set; }
+        public decimal? Decimal3 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public double? Money5 { get; set; }
+        public decimal? Decimal4 { get; set; }
+
+        [IsFilterable]
+        [IsSortable]
+        [IsFacetable]
+        public decimal? Decimal5 { get; set; }
+
+        [IsFilterable]
+        [IsSortable]
+        [IsFacetable]
+        public decimal? Decimal6 { get; set; }
+
+        [IsFilterable]
+        [IsSortable]
+        [IsFacetable]
+        public decimal? Decimal7 { get; set; }
+
+        [IsFilterable]
+        [IsSortable]
+        [IsFacetable]
+        public decimal? Decimal8 { get; set; }
+
+        [IsFilterable]
+        [IsSortable]
+        [IsFacetable]
+        public decimal? Decimal9 { get; set; }
 
         [IsFilterable]
         [IsFacetable]
-        public bool? Flag { get; set; }
+        public bool? Flag0 { get; set; }
+
+        [IsFilterable]
+        [IsFacetable]
+        public bool? Flag1 { get; set; }
 
         [IsFilterable]
         [IsFacetable]
@@ -253,12 +347,6 @@ namespace Shushu.Tokens
 
         [IsFilterable]
         [IsFacetable]
-        public bool? Flag9 { get; set; }
-
-        [IsFilterable]
-        public bool IsDeleted { get; set; }
-
-        [IsSortable]
-        public string Order { get; set; }        
+        public bool? Flag9 { get; set; }                
     }
 }
