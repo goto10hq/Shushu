@@ -6,6 +6,7 @@ namespace Shushu.Attributes
     public class PropertyMapping : Attribute
     {
         public Enums.IndexField IndexField { get; }
+        public string Property { get; set; }
 
         public PropertyMapping(Enums.IndexField indexField)
         {
