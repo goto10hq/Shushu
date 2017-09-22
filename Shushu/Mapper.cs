@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Sushi2;
 using Microsoft.Spatial;
+using System.Linq;
 
 namespace Shushu
 {
@@ -17,8 +18,8 @@ namespace Shushu
         Lazy<IMemoryCache> _classCache = new Lazy<IMemoryCache>(() => new MemoryCache(new MemoryCacheOptions()));
         public IMemoryCache ClassCache => _classCache.Value;
 
-        Lazy<IMemoryCache> _propsCache = new Lazy<IMemoryCache>(() => new MemoryCache(new MemoryCacheOptions()));
-        public IMemoryCache PropsCache => _propsCache.Value;
+        Lazy<IMemoryCache> _propertiesCache = new Lazy<IMemoryCache>(() => new MemoryCache(new MemoryCacheOptions()));
+        public IMemoryCache PropertiesCache => _propertiesCache.Value;
 
         MapperCore()
         {
@@ -44,6 +45,9 @@ namespace Shushu
                 {
                     if (ca is ClassMapping ca2)
                     {
+                        if (classMappings.Any(cm => cm.IndexField == ca2.IndexField))
+                            throw new Exception($"Multiple class mapping for index field ${ca2.IndexField}.");
+
                         classMappings.Add(ca2);
                     }
                 }
@@ -52,12 +56,12 @@ namespace Shushu
             }
 
             // get properties mappins
-            var propsMappings = MapperCore.Instance.ClassCache.Get(obj.GetType()) as List<PropertyMapping>;
+            var propertyMappins = MapperCore.Instance.ClassCache.Get(obj.GetType()) as List<PropertyMapping>;
 
-            if (propsMappings == null)
+            if (propertyMappins == null)
             {
                 var props = obj.GetType().GetProperties();
-                propsMappings = new List<PropertyMapping>();
+                propertyMappins = new List<PropertyMapping>();
 
                 foreach (var p in props)
                 {
@@ -69,13 +73,15 @@ namespace Shushu
                         {
                             pm.Property = p.Name;
 
-                            propsMappings.Add(pm);
+                            if (propertyMappins.Any(prop => prop.IndexField == pm.IndexField))
+                                throw new Exception($"Multiple property mapping for index field ${pm.IndexField}.");
+
+                            propertyMappins.Add(pm);
                         }
                     }
                 }
 
-
-                MapperCore.Instance.PropsCache.Set(obj.GetType(), propsMappings);
+                MapperCore.Instance.PropertiesCache.Set(obj.GetType(), propertyMappins);
             }
 
             // create azure search instance
@@ -88,7 +94,7 @@ namespace Shushu
             }
 
             // set property mappings
-            foreach (var pm in propsMappings)
+            foreach (var pm in propertyMappins)
             {
                 var value = obj.GetPropertyValue(pm.Property);
 
