@@ -118,17 +118,96 @@ namespace Shushu.Tests
         }
 
         [TestMethod]        
-        public void TestSearchParameterMappings()
+        public void TestSearchParameterMappingsForOrderBy()
         {
             var p = new SearchParameters
-            {
-                Filter = "entity eq 'something' and @Title eq 'test'",
-                OrderBy = new List<string> { "@Iq" }                
+            {                
+                OrderBy = new List<string> { "@Iq", "@Location", "foo" }                
             };
 
             p = p.MapSearchParameters<Aoba>();
 
-            Assert.AreEqual("entity eq 'something' and Text0 eq 'test'", p.Filter);
+            Assert.AreEqual(p.OrderBy.Count, 3);
+            Assert.AreEqual("number0", p.OrderBy[0]);
+            Assert.AreEqual("point0", p.OrderBy[1]);
+            Assert.AreEqual("foo", p.OrderBy[2]);
+        }
+
+        [TestMethod]
+        public void TestSearchParameterMappingsForSelect()
+        {
+            var p = new SearchParameters
+            {
+                Select = new List<string> { "@Iq", "@Location", "foo" }
+            };
+
+            p = p.MapSearchParameters<Aoba>();
+
+            Assert.AreEqual(p.Select.Count, 3);
+            Assert.AreEqual("number0", p.Select[0]);
+            Assert.AreEqual("point0", p.Select[1]);
+            Assert.AreEqual("foo", p.Select[2]);
+        }
+
+        [TestMethod]
+        public void TestSearchParameterMappingsForHighlightFields()
+        {
+            var p = new SearchParameters
+            {
+                HighlightFields = new List<string> { "@Iq", "@Location", "foo" }
+            };
+
+            p = p.MapSearchParameters<Aoba>();
+
+            Assert.AreEqual(p.HighlightFields.Count, 3);
+            Assert.AreEqual("number0", p.HighlightFields[0]);
+            Assert.AreEqual("point0", p.HighlightFields[1]);
+            Assert.AreEqual("foo", p.HighlightFields[2]);
+        }
+
+        [TestMethod]
+        public void TestSearchParameterMappingsForSearchFields()
+        {
+            var p = new SearchParameters
+            {
+                SearchFields = new List<string> { "@Iq", "@Location", "foo" }
+            };
+
+            p = p.MapSearchParameters<Aoba>();
+
+            Assert.AreEqual(p.SearchFields.Count, 3);
+            Assert.AreEqual("number0", p.SearchFields[0]);
+            Assert.AreEqual("point0", p.SearchFields[1]);
+            Assert.AreEqual("foo", p.SearchFields[2]);
+        }
+
+        [TestMethod]
+        public void TestSearchParameterMappingsForFacets()
+        {
+            var p = new SearchParameters
+            {
+                Facets = new List<string> { "@Iq:day", "@Location", "foo" }
+            };
+
+            p = p.MapSearchParameters<Aoba>();
+
+            Assert.AreEqual(p.Facets.Count, 3);
+            Assert.AreEqual("number0:day", p.Facets[0]);
+            Assert.AreEqual("point0", p.Facets[1]);
+            Assert.AreEqual("foo", p.Facets[2]);
+        }
+
+        [TestMethod]
+        public void TestSearchParameterMappingsForFilter()
+        {
+            var p = new SearchParameters
+            {
+                Filter = "entity eq 'something' and @Title eq 'test'",                
+            };
+
+            p = p.MapSearchParameters<Aoba>();
+
+            Assert.AreEqual("entity eq 'something' and text0 eq 'test'", p.Filter);            
         }
 
         [TestMethod]

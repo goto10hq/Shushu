@@ -75,24 +75,65 @@ namespace Shushu
         public static SearchParameters MapSearchParameters<T>(this SearchParameters searchParameters) where T : class
         {
             var propertyMappings = GetPropertyMappings<T>();
-            var classMappings = GetClassMappings<T>();
+            var classMappings = GetClassMappings<T>();           
 
-            //var p = new SearchParameters
-            //{
-            //    Filter = "entity eq 'oslavin/object'",
-            //    OrderBy = new List<string> { "order" },                
-            //    Select = new List<string> {  "order" },
-            //    Facets = new List<string> { "order" },
-            //    HighlightFields = new List<string> {  "xxx" },
-            //    ScoringParameters = new List<ScoringParameter> {  new ScoringParameter("x", new List<string> {  "a" })},
-            //    SearchFields = new List<string> { "order" },                
-            //};
-
-            searchParameters.Filter = searchParameters.Filter.ToParameters().ToQuery(searchParameters.Filter, propertyMappings);            
+            searchParameters.Select = searchParameters.Select.ToParameters().ToQuery(searchParameters.Select, propertyMappings);
+            searchParameters.SearchFields = searchParameters.SearchFields.ToParameters().ToQuery(searchParameters.SearchFields, propertyMappings);
+            searchParameters.HighlightFields = searchParameters.HighlightFields.ToParameters().ToQuery(searchParameters.HighlightFields, propertyMappings);
+            searchParameters.Facets = searchParameters.Facets.ToParameters().ToQuery(searchParameters.Facets, propertyMappings);
+            searchParameters.Filter = searchParameters.Filter.ToParameters().ToQuery(searchParameters.Filter, propertyMappings);
+            searchParameters.OrderBy = searchParameters.OrderBy.ToParameters().ToQuery(searchParameters.OrderBy, propertyMappings);
+            searchParameters.ScoringParameters = searchParameters.ScoringParameters.ToParameters().ToQuery(searchParameters.ScoringParameters, propertyMappings);            
 
             return searchParameters;
         }
-        
+
+        static IList<string> ToQuery(this IEnumerable<string> parameters, IList<string> query, IEnumerable<PropertyMapping> propertyMappins)
+        {
+            if (!parameters.Any())
+                return query;
+
+            var newQuery = query.ToList();
+
+            foreach (var parameter in parameters)
+            {
+                var fi = propertyMappins.FirstOrDefault(pm => ("@" + pm.Property).Equals(parameter));
+
+                if (fi == null)
+                    throw new Exception($"No mapping defined for parameter {parameter}.");
+
+                for (var i = 0; i < newQuery.Count; i++)
+                {
+                    newQuery[i] = newQuery[i].Replace(parameter, fi.IndexField.ToString().ToCamelCase());
+                }
+            }
+
+            return newQuery;
+        }
+
+        static IList<ScoringParameter> ToQuery(this IEnumerable<string> parameters, IList<ScoringParameter> query, IEnumerable<PropertyMapping> propertyMappins)
+        {
+            if (!parameters.Any())
+                return query;
+
+            var newQuery = query.ToList();
+
+            foreach (var parameter in parameters)
+            {
+                var fi = propertyMappins.FirstOrDefault(pm => ("@" + pm.Property).Equals(parameter));
+
+                if (fi == null)
+                    throw new Exception($"No mapping defined for parameter {parameter}.");
+
+                for (var i = 0; i < newQuery.Count; i++)
+                {
+                    newQuery[i] = new ScoringParameter(newQuery[i].Name.Replace(parameter, fi.IndexField.ToString().ToCamelCase()), newQuery[i].Values);
+                }
+            }
+
+            return newQuery;
+        }
+
         static string ToQuery(this IEnumerable<string> parameters, string query, IEnumerable<PropertyMapping> propertyMappins)
         {
             if (!parameters.Any())
@@ -105,7 +146,7 @@ namespace Shushu
                 if (fi == null)
                     throw new Exception($"No mapping defined for parameter {parameter}.");
 
-                query = query.Replace(parameter, fi.IndexField.ToString());
+                query = query.Replace(parameter, fi.IndexField.ToString().ToCamelCase());
             }
 
             return query;
@@ -124,6 +165,48 @@ namespace Shushu
             foreach(Match match in matches)
             {                
                 result.Add(match.Groups["p"].Value);
+            }
+
+            return result;
+        }
+
+        static IEnumerable<string> ToParameters(this IEnumerable<ScoringParameter> parameters)
+        {
+            var result = new List<string>();
+
+            if (parameters == null)
+                return result;
+
+            foreach (var parameter in parameters)
+            {
+                var regex = new Regex(@"(?<p>\@\w+)");
+                var matches = regex.Matches(parameter.Name);
+
+                foreach (Match match in matches)
+                {
+                    result.Add(match.Groups["p"].Value);
+                }
+            }
+
+            return result;
+        }
+
+        static IEnumerable<string> ToParameters(this IEnumerable<string> parameters)
+        {
+            var result = new List<string>();
+
+            if (parameters == null)
+                return result;
+
+            foreach (var parameter in parameters)
+            {
+                var regex = new Regex(@"(?<p>\@\w+)");
+                var matches = regex.Matches(parameter);
+
+                foreach (Match match in matches)
+                {
+                    result.Add(match.Groups["p"].Value);
+                }                
             }
 
             return result;
