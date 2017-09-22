@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shushu;
 using Shushu.Attributes;
 using Shushu.Tokens;
+using System;
 using System.Collections.Generic;
 
 namespace Shushu.Tests
@@ -27,10 +28,7 @@ namespace Shushu.Tests
 
             [PropertyMapping(Enums.IndexField.Text0)]
             public string Title { get; set; }
-
-            [PropertyMapping(Enums.IndexField.Point0)]
-            public GeoPoint Point { get; set; }
-
+            
             [PropertyMapping(Enums.IndexField.Tags7)]
             public List<string> Tags { get; set; }
 
@@ -47,6 +45,26 @@ namespace Shushu.Tests
         public class Umiko
         {
             public string Test { get; set; }
+        }
+
+        [ClassMapping(Enums.IndexField.Number6, 3)]
+        [ClassMapping(Enums.IndexField.Number7, 4)]
+        [ClassMapping(Enums.IndexField.Number6, 5)]
+        public class ErrorClassPoco
+        {
+            public string Test { get; set; }
+        }
+
+        public class ErrorPropertyPoco
+        {
+            [PropertyMapping(Enums.IndexField.Number4)]
+            public string Test { get; set; }
+
+            [PropertyMapping(Enums.IndexField.Number5)]
+            public string Test2 { get; set; }
+
+            [PropertyMapping(Enums.IndexField.Number4)]
+            public string Test3 { get; set; }
         }
 
         [TestMethod]
@@ -81,6 +99,22 @@ namespace Shushu.Tests
             Assert.AreEqual(220, search.Number0);
             Assert.AreEqual(3.14m, search.Decimal2);
             Assert.AreEqual(GeographyPoint.Create(130.56, 220.44), search.Point0);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception), "Duplicated class mappings were inappropriately allowed.")]
+        public void TestDuplicatedClassMappings()
+        {
+            var poco = new ErrorClassPoco();
+            var search = poco.MapToSearch();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception), "Duplicated property mappings were inappropriately allowed.")]
+        public void TestDuplicatedPropertyMappings()
+        {
+            var poco = new ErrorPropertyPoco();
+            var search = poco.MapToSearch();
         }
     }
 }
