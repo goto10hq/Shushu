@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.Azure.Search;
 using Microsoft.Spatial;
+using Microsoft.Azure.Search.Models;
 
 namespace Shushu.Tokens
 {
+    [SerializePropertyNamesAsCamelCase]
     public class AzureSearch
     {
         [Key]

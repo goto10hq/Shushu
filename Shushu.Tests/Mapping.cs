@@ -1,6 +1,6 @@
+using Microsoft.Azure.Search.Models;
 using Microsoft.Spatial;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Shushu;
 using Shushu.Attributes;
 using Shushu.Tokens;
 using System;
@@ -71,7 +71,7 @@ namespace Shushu.Tests
         public void NoMappingPoco()
         {
             var u = new Umiko { Test = "test" };
-            var search = u.MapToSearch();
+            var search = u.MapIndex();
 
             Assert.AreEqual(null, search.Entity);
             Assert.AreEqual(null, search.Text0);
@@ -82,7 +82,7 @@ namespace Shushu.Tests
         {
             var a = new Aoba { Id = "id-6502", IgnoreMe = false, Title = "Umiko", Tags = new List<string> { "hi", "ho" }, Location = new GeoPoint(130.56, 220.44), Clever = true };
 
-            var search = a.MapToSearch();
+            var search = a.MapIndex();
 
             // class mappings
             Assert.AreEqual("myproject/aoba", search.Entity);
@@ -106,7 +106,7 @@ namespace Shushu.Tests
         public void TestDuplicatedClassMappings()
         {
             var poco = new ErrorClassPoco();
-            var search = poco.MapToSearch();
+            var search = poco.MapIndex();
         }
 
         [TestMethod]
@@ -114,7 +114,32 @@ namespace Shushu.Tests
         public void TestDuplicatedPropertyMappings()
         {
             var poco = new ErrorPropertyPoco();
-            var search = poco.MapToSearch();
+            var search = poco.MapIndex();
+        }
+
+        [TestMethod]        
+        public void TestSearchParameterMappings()
+        {
+            var p = new SearchParameters
+            {
+                Filter = "entity eq 'something' and @Title eq 'test'",
+                OrderBy = new List<string> { "@Iq" }                
+            };
+
+            p = p.MapSearchParameters<Aoba>();
+
+            Assert.AreEqual("entity eq 'something' and Text0 eq 'test'", p.Filter);
+        }
+
+        [TestMethod]
+        public void CamelCasePropertyNameResolver()
+        {
+            Assert.AreEqual("foo", "foo".ToCamelCase());
+            Assert.AreEqual("foo", "Foo".ToCamelCase());
+            Assert.AreEqual("fooBar", "FooBar".ToCamelCase());
+            Assert.AreEqual("foo_Bar", "Foo_Bar".ToCamelCase());
+            Assert.AreEqual("myid", "MYID".ToCamelCase());
+            Assert.AreEqual("myiDoh", "MYIDoh".ToCamelCase());
         }
     }
 }

@@ -7,6 +7,9 @@ using System.Reflection;
 using Sushi2;
 using Microsoft.Spatial;
 using System.Linq;
+using Microsoft.Azure.Search.Models;
+using System.Text.RegularExpressions;
+using Newtonsoft.Json.Serialization;
 
 namespace Shushu
 {
@@ -19,7 +22,7 @@ namespace Shushu
         public IMemoryCache ClassCache => _classCache.Value;
 
         Lazy<IMemoryCache> _propertiesCache = new Lazy<IMemoryCache>(() => new MemoryCache(new MemoryCacheOptions()));
-        public IMemoryCache PropertiesCache => _propertiesCache.Value;
+        public IMemoryCache PropertiesCache => _propertiesCache.Value;        
 
         MapperCore()
         {
@@ -28,61 +31,14 @@ namespace Shushu
 
     public static class Mapper
     {
-        public static AzureSearch MapToSearch<T>(this T obj) where T : class
+        public static AzureSearch MapIndex<T>(this T obj) where T : class
         {
             if (obj == null)
                 throw new ArgumentNullException(nameof(obj));
 
-            // get class mappings
-            var classMappings = MapperCore.Instance.ClassCache.Get(obj.GetType()) as List<ClassMapping>;
-
-            if (classMappings == null)
-            {
-                var cac = obj.GetType().GetCustomAttributes(false);
-                classMappings = new List<ClassMapping>();
-
-                foreach (var ca in cac)
-                {
-                    if (ca is ClassMapping ca2)
-                    {
-                        if (classMappings.Any(cm => cm.IndexField == ca2.IndexField))
-                            throw new Exception($"Multiple class mapping for index field ${ca2.IndexField}.");
-
-                        classMappings.Add(ca2);
-                    }
-                }
-
-                MapperCore.Instance.ClassCache.Set(obj.GetType(), classMappings);
-            }
-
-            // get properties mappins
-            var propertyMappins = MapperCore.Instance.ClassCache.Get(obj.GetType()) as List<PropertyMapping>;
-
-            if (propertyMappins == null)
-            {
-                var props = obj.GetType().GetProperties();
-                propertyMappins = new List<PropertyMapping>();
-
-                foreach (var p in props)
-                {
-                    var cac = p.GetCustomAttributes(false);
-
-                    foreach (var ca in cac)
-                    {
-                        if (ca is PropertyMapping pm)
-                        {
-                            pm.Property = p.Name;
-
-                            if (propertyMappins.Any(prop => prop.IndexField == pm.IndexField))
-                                throw new Exception($"Multiple property mapping for index field ${pm.IndexField}.");
-
-                            propertyMappins.Add(pm);
-                        }
-                    }
-                }
-
-                MapperCore.Instance.PropertiesCache.Set(obj.GetType(), propertyMappins);
-            }
+            // get mappings
+            var classMappings = GetClassMappings<T>();
+            var propertyMappins = GetPropertyMappings<T>();            
 
             // create azure search instance
             var search = new AzureSearch();
@@ -115,5 +71,127 @@ namespace Shushu
 
             return search;
         }
+
+        public static SearchParameters MapSearchParameters<T>(this SearchParameters searchParameters) where T : class
+        {
+            var propertyMappings = GetPropertyMappings<T>();
+            var classMappings = GetClassMappings<T>();
+
+            //var p = new SearchParameters
+            //{
+            //    Filter = "entity eq 'oslavin/object'",
+            //    OrderBy = new List<string> { "order" },                
+            //    Select = new List<string> {  "order" },
+            //    Facets = new List<string> { "order" },
+            //    HighlightFields = new List<string> {  "xxx" },
+            //    ScoringParameters = new List<ScoringParameter> {  new ScoringParameter("x", new List<string> {  "a" })},
+            //    SearchFields = new List<string> { "order" },                
+            //};
+
+            searchParameters.Filter = searchParameters.Filter.ToParameters().ToQuery(searchParameters.Filter, propertyMappings);            
+
+            return searchParameters;
+        }
+        
+        static string ToQuery(this IEnumerable<string> parameters, string query, IEnumerable<PropertyMapping> propertyMappins)
+        {
+            if (!parameters.Any())
+                return query;
+
+            foreach(var parameter in parameters)
+            {
+                var fi = propertyMappins.FirstOrDefault(pm => ("@" + pm.Property).Equals(parameter));
+
+                if (fi == null)
+                    throw new Exception($"No mapping defined for parameter {parameter}.");
+
+                query = query.Replace(parameter, fi.IndexField.ToString());
+            }
+
+            return query;
+        }
+
+        static IEnumerable<string> ToParameters(this string query)
+        {
+            var result = new List<string>();
+
+            if (query == null)
+                return result;
+            
+            var regex = new Regex(@"(?<p>\@\w+)");
+            var matches = regex.Matches(query);
+
+            foreach(Match match in matches)
+            {                
+                result.Add(match.Groups["p"].Value);
+            }
+
+            return result;
+        }
+
+        static IEnumerable<ClassMapping> GetClassMappings<T>() where T: class
+        {
+            var classMappings = MapperCore.Instance.ClassCache.Get(typeof(T)) as List<ClassMapping>;
+
+            if (classMappings == null)
+            {
+                var cac = typeof(T).GetCustomAttributes(false);
+                classMappings = new List<ClassMapping>();
+
+                foreach (var ca in cac)
+                {
+                    if (ca is ClassMapping ca2)
+                    {
+                        if (classMappings.Any(cm => cm.IndexField == ca2.IndexField))
+                            throw new Exception($"Multiple class mapping for index field ${ca2.IndexField}.");
+
+                        classMappings.Add(ca2);
+                    }
+                }
+
+                MapperCore.Instance.ClassCache.Set(typeof(T), classMappings);
+            }
+
+            return classMappings;
+        }
+
+        static IEnumerable<PropertyMapping> GetPropertyMappings<T>() where T: class
+        {            
+            var propertyMappins = MapperCore.Instance.ClassCache.Get(typeof(T)) as List<PropertyMapping>;
+
+            if (propertyMappins == null)
+            {
+                var props = typeof(T).GetProperties();
+                propertyMappins = new List<PropertyMapping>();
+
+                foreach (var p in props)
+                {
+                    var cac = p.GetCustomAttributes(false);
+
+                    foreach (var ca in cac)
+                    {
+                        if (ca is PropertyMapping pm)
+                        {
+                            pm.Property = p.Name;
+
+                            if (propertyMappins.Any(prop => prop.IndexField == pm.IndexField))
+                                throw new Exception($"Multiple property mapping for index field ${pm.IndexField}.");
+
+                            propertyMappins.Add(pm);
+                        }
+                    }
+                }
+
+                MapperCore.Instance.PropertiesCache.Set(typeof(T), propertyMappins);
+            }
+
+            return propertyMappins;
+        }
+
+        internal static string ToCamelCase(this string propertyName)
+        {
+            var resolver = new CamelCasePropertyNamesContractResolver();
+            return resolver.GetResolvedPropertyName(propertyName);
+        }        
     }
 }
