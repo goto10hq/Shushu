@@ -13,6 +13,8 @@ using Newtonsoft.Json.Serialization;
 
 namespace Shushu
 {
+    // TODO: force definition of index field ID?
+    // TODO: check types when mapping?
     public class MapperCore
     {
         static readonly Lazy<MapperCore> _lazyInstance = new Lazy<MapperCore>(() => new MapperCore());

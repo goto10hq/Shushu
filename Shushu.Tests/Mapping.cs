@@ -32,8 +32,8 @@ namespace Shushu.Tests
             [PropertyMapping(Enums.IndexField.Tags7)]
             public List<string> Tags { get; set; }
 
-            [PropertyMapping(Enums.IndexField.Decimal2)]
-            public decimal Money { get; set; } = 3.14m;
+            [PropertyMapping(Enums.IndexField.Double2)]
+            public double Money { get; set; } = 3.14;
 
             [PropertyMapping(Enums.IndexField.Number0)]
             public int Iq { get; set; } = 220;
@@ -97,7 +97,7 @@ namespace Shushu.Tests
             Assert.AreEqual(2, search.Tags7.Count);
             Assert.AreEqual("ho", search.Tags7[1]);
             Assert.AreEqual(220, search.Number0);
-            Assert.AreEqual(3.14m, search.Decimal2);
+            Assert.AreEqual(3.14, search.Double2);
             Assert.AreEqual(GeographyPoint.Create(130.56, 220.44), search.Point0);
         }
 

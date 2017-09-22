@@ -265,52 +265,52 @@ namespace Shushu.Tokens
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public decimal? Decimal0 { get; set; }
+        public double? Double0 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public decimal? Decimal1 { get; set; }
+        public double? Double1 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public decimal? Decimal2 { get; set; }
+        public double? Double2 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public decimal? Decimal3 { get; set; }
+        public double? Double3 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public decimal? Decimal4 { get; set; }
+        public double? Double4 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public decimal? Decimal5 { get; set; }
+        public double? Double5 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public decimal? Decimal6 { get; set; }
+        public double? Double6 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public decimal? Decimal7 { get; set; }
+        public double? Double7 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public decimal? Decimal8 { get; set; }
+        public double? Double8 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public decimal? Decimal9 { get; set; }
+        public double? Double9 { get; set; }
 
         [IsFilterable]
         [IsFacetable]
