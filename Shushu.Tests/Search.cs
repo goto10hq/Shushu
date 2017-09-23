@@ -4,6 +4,7 @@ using Shushu.Attributes;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Azure.Search.Models;
+using System.Threading;
 
 namespace Shushu.Tests
 {
@@ -62,6 +63,8 @@ namespace Shushu.Tests
             };
 
             _shushu.IndexDocuments(shushus);
+
+            Thread.Sleep(3 * 1000);
         }
 
         [TestMethod]
@@ -140,10 +143,30 @@ namespace Shushu.Tests
             Assert.AreEqual(3, result.Results.Count);
         }
 
+        [TestMethod]
+        public void DeleteDocument()
+        {
+            var s = new Shu("6", "kotori", 130);
+
+            _shushu.IndexDocument(s);
+
+            Thread.Sleep(3 * 1000);
+
+            var n = _shushu.CountAllDocuments();
+            Assert.AreEqual(6, n);
+
+            Thread.Sleep(3 * 1000);
+            _shushu.DeleteDocument("6");
+            Thread.Sleep(3 * 1000);
+
+            n = _shushu.CountAllDocuments();
+            _shushu.DeleteDocument("5");
+        }
+
         [TestCleanup]
         public void Cleanup()
         {
-            //_shushu.DeleteIndex();
+            _shushu.DeleteIndex();
         }
     }
 }
