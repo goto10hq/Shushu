@@ -134,7 +134,7 @@ namespace Shushu.Tests
         {
             var p = new SearchParameters
             {                
-                OrderBy = new List<string> { "@Iq", "@Location", "foo" }                
+                OrderBy = new List<string>{ "@Iq", "@Location", "foo" }                
             };
 
             p = p.MapSearchParameters<Aoba>();

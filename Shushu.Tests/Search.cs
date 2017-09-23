@@ -86,7 +86,6 @@ namespace Shushu.Tests
         {
             var sp = new SearchParameters
             {
-                Filter = "@Entity eq 'shushu'",
                 Top = 1,
                 OrderBy = new List<string> { "@Iq" }
             };
@@ -94,7 +93,7 @@ namespace Shushu.Tests
             var result = _shushu.SearchDocuments<Shu>("*", sp);
 
             Assert.AreEqual(1, result.Results.Count);
-            Assert.AreEqual(4, result.Results[0].Document.Id);
+            Assert.AreEqual("4", result.Results[0].Document.Id);
         }
 
         [TestMethod]
@@ -102,7 +101,6 @@ namespace Shushu.Tests
         {
             var sp = new SearchParameters
             {
-                Filter = "@Entity eq 'shushu'",
                 Top = 2,
                 OrderBy = new List<string> { "@Iq desc" }
             };
@@ -110,8 +108,21 @@ namespace Shushu.Tests
             var result = _shushu.SearchDocuments<Shu>("*", sp);
 
             Assert.AreEqual(2, result.Results.Count);
-            Assert.AreEqual(2, result.Results[0].Document.Id);
-            Assert.AreEqual(3, result.Results[1].Document.Id);
+            Assert.AreEqual("2", result.Results[0].Document.Id);
+            Assert.AreEqual("3", result.Results[1].Document.Id);
+        }
+
+        [TestMethod]
+        public void SearchDocumentsFilter()
+        {
+            var sp = new SearchParameters
+            {
+                SearchFields = new List<string> { "@Name" }
+            };
+
+            var result = _shushu.SearchDocuments<Shu>("umi*", sp);
+
+            Assert.AreEqual(1, result.Results.Count);
         }
 
         [TestCleanup]

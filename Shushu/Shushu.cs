@@ -13,6 +13,9 @@ namespace Shushu
     /// </summary>
     public class Shushu
     {
+        // escaping special chars
+        // + - && || ! ( ) { } [ ] ^ " ~ * ? : \ /
+
         /// <summary>
         /// The size of the batch.
         /// </summary>
@@ -123,7 +126,6 @@ namespace Shushu
                 for (var i2 = 0; i2 < MaxBatchSize && i + i2 < max; i2++)
                 {
                     var item = documents[i + i2].MapToIndex();
-                    System.Console.WriteLine(item.GetType());
                     items.Add(item);    
                 }
 
