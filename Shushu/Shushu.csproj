@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Shushu</PackageId>
     <Title>Shushu</Title>
-    <Version>1.1.0</Version>
+    <Version>2.0.0</Version>
     <Authors>frohikey</Authors>
     <PackageLicenseUrl>https://github.com/goto10hq/Shushu/blob/master/LICENSE</PackageLicenseUrl>
     <Owners>Goto10</Owners>
