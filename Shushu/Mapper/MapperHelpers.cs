@@ -14,6 +14,9 @@ namespace Shushu
     /// </summary>
     static class MapperHelpers
     {
+        static readonly object _lockProperties = new object();
+        static readonly object _lockClass = new object();
+
         internal static IList<string> ToQuery(this IEnumerable<string> parameters, IList<string> query, IEnumerable<PropertyMapping> propertyMappins)
         {
             if (!parameters.Any())
@@ -140,61 +143,67 @@ namespace Shushu
 
         internal static IEnumerable<ClassMapping> GetClassMappings<T>() where T : class
         {
-            var classMappings = MapperCore.Instance.ClassCache.Get(typeof(T)) as List<ClassMapping>;
-
-            if (classMappings == null)
+            lock (_lockClass)
             {
-                var cac = typeof(T).GetCustomAttributes(false);
-                classMappings = new List<ClassMapping>();
+                var classMappings = MapperCore.Instance.ClassCache.Get(typeof(T)) as List<ClassMapping>;
 
-                foreach (var ca in cac)
+                if (classMappings == null)
                 {
-                    if (ca is ClassMapping ca2)
-                    {
-                        if (classMappings.Any(cm => cm.IndexField == ca2.IndexField))
-                            throw new Exception($"Multiple class mapping for index field ${ca2.IndexField}.");
+                    var cac = typeof(T).GetCustomAttributes(false);
+                    classMappings = new List<ClassMapping>();
 
-                        classMappings.Add(ca2);
+                    foreach (var ca in cac)
+                    {
+                        if (ca is ClassMapping ca2)
+                        {
+                            if (classMappings.Any(cm => cm.IndexField == ca2.IndexField))
+                                throw new Exception($"Multiple class mapping for index field ${ca2.IndexField}.");
+
+                            classMappings.Add(ca2);
+                        }
                     }
+
+                    MapperCore.Instance.ClassCache.Set(typeof(T), classMappings);
                 }
 
-                MapperCore.Instance.ClassCache.Set(typeof(T), classMappings);
+                return classMappings;
             }
-
-            return classMappings;
         }
 
         internal static IEnumerable<PropertyMapping> GetPropertyMappings<T>() where T : class
         {
-            var propertyMappins = MapperCore.Instance.ClassCache.Get(typeof(T)) as List<PropertyMapping>;
-
-            if (propertyMappins == null)
+            lock (_lockProperties)
             {
-                var props = typeof(T).GetProperties();
-                propertyMappins = new List<PropertyMapping>();
+                var propertyMappins = MapperCore.Instance.ClassCache.Get(typeof(T)) as List<PropertyMapping>;
 
-                foreach (var p in props)
+                if (propertyMappins == null)
                 {
-                    var cac = p.GetCustomAttributes(false);
+                    var props = typeof(T).GetProperties();
+                    propertyMappins = new List<PropertyMapping>();
 
-                    foreach (var ca in cac)
+                    foreach (var p in props)
                     {
-                        if (ca is PropertyMapping pm)
+                        var cac = p.GetCustomAttributes(false);
+
+                        foreach (var ca in cac)
                         {
-                            pm.Property = p.Name;
+                            if (ca is PropertyMapping pm)
+                            {
+                                pm.Property = p.Name;
 
-                            if (propertyMappins.Any(prop => prop.IndexField == pm.IndexField))
-                                throw new Exception($"Multiple property mapping for index field ${pm.IndexField}.");
+                                if (propertyMappins.Any(prop => prop.IndexField == pm.IndexField))
+                                    throw new Exception($"Multiple property mapping for index field ${pm.IndexField}.");
 
-                            propertyMappins.Add(pm);
+                                propertyMappins.Add(pm);
+                            }
                         }
                     }
+
+                    MapperCore.Instance.PropertiesCache.Set(typeof(T), propertyMappins);
                 }
 
-                MapperCore.Instance.PropertiesCache.Set(typeof(T), propertyMappins);
+                return propertyMappins;
             }
-
-            return propertyMappins;
         }
 
         internal static string ToCamelCase(this string propertyName)

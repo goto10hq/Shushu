@@ -14,19 +14,19 @@ namespace Shushu
     public static class Mapper
     {
         /// <summary>
-        /// Maps the object to Azure Search object.
+        /// Maps the object to Shushu index.
         /// </summary>
-        /// <returns>The Azure search object..</returns>
+        /// <returns>The Shushu index.</returns>
         /// <param name="obj">The object.</param>
         /// <typeparam name="T">The type of object.</typeparam>
-        public static AzureSearch MapToIndex<T>(this T obj) where T : class
+        public static ShushuIndex MapToIndex<T>(this T obj) where T : class
         {
             if (obj == null)
                 throw new ArgumentNullException(nameof(obj));
 
-            // no mappings needed for AzureSearch objects
-            if (typeof(T) == typeof(AzureSearch))
-                return obj as AzureSearch;
+            // no mappings needed for Shushu objects
+            if (typeof(T) == typeof(ShushuIndex))
+                return obj as ShushuIndex;
 
             // get mappings
             var classMappings = MapperHelpers.GetClassMappings<T>();
@@ -39,13 +39,13 @@ namespace Shushu
                 throw new Exception("You have to define a mapping for index field Id.");
             }
 
-            // create azure search instance
-            var search = new AzureSearch();
+            // create Shushu index instance
+            var shushu = new ShushuIndex();
 
             // set class mappings
             foreach (var cm in classMappings)
             {
-                search.GetType().GetTypeInfo().GetProperty(cm.IndexField.ToString()).SetValue(search, cm.Value);
+                shushu.GetType().GetTypeInfo().GetProperty(cm.IndexField.ToString()).SetValue(shushu, cm.Value);
             }
 
             // set property mappings
@@ -59,16 +59,16 @@ namespace Shushu
                         value is GeoPoint gp)
                     {
                         value = GeographyPoint.Create(gp.Coordinates[0], gp.Coordinates[1]);
-                        search.GetType().GetTypeInfo().GetProperty(pm.IndexField.ToString()).SetValue(search, value);
+                        shushu.GetType().GetTypeInfo().GetProperty(pm.IndexField.ToString()).SetValue(shushu, value);
                     }
                     else
                     {
-                        search.GetType().GetTypeInfo().GetProperty(pm.IndexField.ToString()).SetValue(search, value);
+                        shushu.GetType().GetTypeInfo().GetProperty(pm.IndexField.ToString()).SetValue(shushu, value);
                     }
                 }
             }
 
-            return search;
+            return shushu;
         }
 
         /// <summary>

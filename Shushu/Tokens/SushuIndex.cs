@@ -8,10 +8,10 @@ using Microsoft.Azure.Search.Models;
 namespace Shushu.Tokens
 {
     /// <summary>
-    /// Azure search index.
+    /// Shushu index.
     /// </summary>
     [SerializePropertyNamesAsCamelCase]
-    public class AzureSearch
+    public class ShushuIndex
     {
         [Key]
         [IsFilterable]

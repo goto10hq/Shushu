@@ -100,10 +100,10 @@ namespace Shushu.Tests
         }
 
         [TestMethod]
-        public void MappingAzureSearchDirectly()
+        public void MappingShushuIndexDirectly()
         {
             var dt = DateTime.Now;
-            var a = new AzureSearch { Id = "foo", Text0 = "bar", Date0 = dt };
+            var a = new ShushuIndex { Id = "foo", Text0 = "bar", Date0 = dt };
 
             var search = a.MapToIndex();
 

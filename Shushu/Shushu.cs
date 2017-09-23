@@ -81,7 +81,7 @@ namespace Shushu
         /// <typeparam name="T">The document type.</typeparam>
         public async Task IndexDocumentAsync<T>(T document, bool merge = true) where T: class
         {
-            var documents = new List<AzureSearch> { document.MapToIndex() };
+            var documents = new List<ShushuIndex> { document.MapToIndex() };
 
             if (merge)
             {
@@ -114,18 +114,18 @@ namespace Shushu
         /// <typeparam name="T">The document type.</typeparam>
         public async Task IndexDocumentsAsync<T>(IEnumerable<T> documents, bool merge = true) where T: class
         {
-            var chunks = documents.Select((x, i) => new { Index = i, Value = x }).GroupBy(x => x.Index / BatchSize).Select(x => x.Select(v => v.Value.MapToIndex()).ToList()).ToList();
+            var chunks = documents.Select((x, i) => new { Index = i, Value = x }).GroupBy(x => x.Index / BatchSize).Select(x => x.Select(v => v.Value.MapToIndex()));
 
             foreach(var chunk in chunks)
             {
                 if (merge)
                 {
-                    var batch = IndexBatch.MergeOrUpload(chunk);
+                    var batch = IndexBatch.MergeOrUpload(chunk.Select(d => d.MapToIndex()));
                     await _indexClient.Documents.IndexAsync(batch);
                 }
                 else
                 {
-                    var batch = IndexBatch.MergeOrUpload(chunk);
+                    var batch = IndexBatch.Upload(chunk.Select(d => d.MapToIndex()));
                     await _indexClient.Documents.IndexAsync(batch);
                 }
             }
@@ -139,7 +139,7 @@ namespace Shushu
             var definition = new Index
             {
                 Name = _index,
-                Fields = FieldBuilder.BuildForType<AzureSearch>()
+                Fields = FieldBuilder.BuildForType<ShushuIndex>()
             };
 
             return _serviceClient.Indexes.Create(definition);
