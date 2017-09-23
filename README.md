@@ -6,3 +6,7 @@
 [![Visual Studio Team services](https://img.shields.io/vso/build/frohikey/c3964e53-4bf3-417a-a96e-661031ef862f/119.svg?style=flat-square)](https://github.com/goto10hq/Shushu)
 
 ![Sushu](https://github.com/goto10hq/Shushu/raw/master/shushu.png)
+
+## TODO
+
+- check types of properties being indexes

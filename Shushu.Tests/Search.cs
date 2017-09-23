@@ -72,7 +72,7 @@ namespace Shushu.Tests
         [TestMethod]
         public void NoMappingPoco()
         {
-            Assert.AreEqual(null, null);            
+            // todo
         }
     }
 }

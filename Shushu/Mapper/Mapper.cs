@@ -9,25 +9,17 @@ using System.Linq;
 
 namespace Shushu
 {
-    // TODO: check types when mapping?
-    internal class MapperCore
-    {
-        static readonly Lazy<MapperCore> _lazyInstance = new Lazy<MapperCore>(() => new MapperCore());
-        public static MapperCore Instance => _lazyInstance.Value;
-
-        Lazy<IMemoryCache> _classCache = new Lazy<IMemoryCache>(() => new MemoryCache(new MemoryCacheOptions()));
-        public IMemoryCache ClassCache => _classCache.Value;
-
-        Lazy<IMemoryCache> _propertiesCache = new Lazy<IMemoryCache>(() => new MemoryCache(new MemoryCacheOptions()));
-        public IMemoryCache PropertiesCache => _propertiesCache.Value;        
-
-        MapperCore()
-        {
-        }
-    }
-
+    /// <summary>
+    /// Mapper.
+    /// </summary>
     public static class Mapper
     {
+        /// <summary>
+        /// Maps the object to Azure Search object.
+        /// </summary>
+        /// <returns>The Azure search object..</returns>
+        /// <param name="obj">The object.</param>
+        /// <typeparam name="T">The type of object.</typeparam>
         public static AzureSearch MapToIndex<T>(this T obj) where T : class
         {
             if (obj == null)
