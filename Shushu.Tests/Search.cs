@@ -125,6 +125,21 @@ namespace Shushu.Tests
             Assert.AreEqual(1, result.Results.Count);
         }
 
+        [TestMethod]
+        public void SearchDocumentsRegex()
+        {
+            var sp = new SearchParameters
+            {
+                Filter = "entity eq 'shushu'",
+                SearchFields = new List<string> { "@Name" },
+                QueryType = QueryType.Full
+            };
+
+            var result = _shushu.SearchDocuments<Shu>("/.*mi.*/", sp);
+
+            Assert.AreEqual(3, result.Results.Count);
+        }
+
         [TestCleanup]
         public void Cleanup()
         {

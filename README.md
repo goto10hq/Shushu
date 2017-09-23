@@ -165,7 +165,7 @@ And of course the most import part... searching itself. Again search parameters 
 ```csharp
 var sp = new SearchParameters
 {
- Filter = "@Entity eq 'shushu'",
+ Filter = "entity eq 'shushu'",
  Top = 5,
  OrderBy = new List<string> { "@Iq desc" }
 };
