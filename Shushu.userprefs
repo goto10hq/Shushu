@@ -1,0 +1,22 @@
+﻿<Properties StartupConfiguration="{2C81689F-2765-411B-938E-F4DE726B5F1A}|Default">
+  <MonoDevelop.Ide.ItemProperties.Shushu.Tests PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Shushu/Tokens/AzureSearch.cs">
+    <Files>
+      <File FileName="README.md" Line="12" Column="20" />
+      <File FileName="Shushu.Tests/Search.cs" Line="65" Column="9" />
+      <File FileName="Shushu/Mapper/Mapper.cs" Line="26" Column="1" />
+      <File FileName="Shushu/Shushu.cs" Line="131" Column="14" />
+      <File FileName="Shushu.Tests/Mapping.cs" Line="1" Column="1" />
+      <File FileName="Shushu Status" />
+      <File FileName="Shushu/Tokens/AzureSearch.cs" Line="360" Column="51" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/frohikey/Projects/Goto10/Shushu/Shushu/Mapper/Mapper.cs" relfile="Shushu/Mapper/Mapper.cs" line="36" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+</Properties>
