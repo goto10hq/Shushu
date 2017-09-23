@@ -10,7 +10,8 @@
 
 ## Preface
 
-__Azure Search__ has kinda not super firendly teirs for situations when you have zillions of various document types organized in relatively small batches. In such cases it would becomes quite handy to have a possibility to just have one __universal index__. Unfortunately it's quite cumbersome to make mappings like:
+__Azure Search__ has kinda not super firendly teirs for situations when you have zillions of various document types organized in relatively small batches. 
+In such cases it would becomes quite handy to have a possibility to just have one __universal index__. Unfortunately it's quite cumbersome to make mappings like:
 
 ```
 Title -> Text0, Author -> Text1, ...
@@ -20,7 +21,7 @@ Here comes __Shushu__ to smooth things up.
 
 ## One index for all
 
-[AzureSearch](https://github.com/goto10hq/Shushu/blob/master/Shushu/Tokens/AzureSearch.cs) is the main index.
+[ShushuIndex](https://github.com/goto10hq/Shushu/blob/master/Shushu/Tokens/ShushuIndex.cs) is the main index.
 
 ```csharp
 [IsFilterable]
@@ -84,17 +85,21 @@ Note:
 
 ### Methods
 
-`DeleteIndex`
+`long CountAllDocuments()`
 
-Delete index.
+Count all documents in index.
 
-`IndexDocument(document, merge)`
+`IndexDocument<T>(T document, bool merge)`
 
 Upload or upload+merge and index one document.
 
-`IndexDocuments(documents, merge)` 
+`IndexDocuments<T>(IList<T> documents, bool merge)` 
 
 Upload or upload+merge and index documents (automatically served in chunks divided into 1000).
+
+`DeleteIndex()`
+
+Delete index.
 
 Note:
 - all methods have `async` variants
@@ -103,7 +108,7 @@ Note:
 
 We have two mapping attributes:
 - `ClassMapping` - global settings basically for constant values 
-- `PropertyMapping` - mapping property to __AzureSearch__ and vice versa
+- `PropertyMapping` - mapping property to __ShushuIndex__ and vice versa
 
 Decorate your POCO with attributes e.g.
 

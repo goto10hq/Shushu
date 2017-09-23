@@ -36,7 +36,7 @@ namespace Shushu
             if (classMappings.All(x => x.IndexField != Enums.IndexField.Id) &&
                propertyMappings.All(x => x.IndexField != Enums.IndexField.Id))
             {
-                throw new Exception("You have to define a mapping for index field Id.");
+                throw new Exception($"You have to define a mapping for index field Id in {typeof(T)}.");
             }
 
             // create Shushu index instance

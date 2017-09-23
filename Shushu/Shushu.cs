@@ -17,7 +17,7 @@ namespace Shushu
         /// The size of the batch.
         /// </summary>
         /// <remarks>Note that you can only include up to 1000 documents (or 16 MB) in a single indexing request</remarks>
-        const int BatchSize = 1000;
+        const int MaxBatchSize = 1000;
 
         SearchServiceClient _serviceClient;
         SearchIndexClient _searchClient;
@@ -98,37 +98,66 @@ namespace Shushu
         /// <summary>
         /// Index documents.
         /// </summary>
-        /// <param name="documents">The collection of documents.</param>
+        /// <param name="documents">The list of documents.</param>
         /// <param name="merge">If set to <c>true</c> merge otherwise just upload.</param>
         /// <typeparam name="T">The document type.</typeparam>
-        public void IndexDocuments<T>(IEnumerable<T> documents, bool merge = true) where T: class
+        public void IndexDocuments<T>(IList<T> documents, bool merge = true) where T: class
         {
-            AsyncTools.RunSync(() => IndexDocumentAsync(documents, merge));
+            AsyncTools.RunSync(() => IndexDocumentsAsync(documents, merge));
         }
 
         /// <summary>
         /// Index documents.
         /// </summary>
-        /// <param name="documents">The collection of documents.</param>
+        /// <param name="documents">The list of documents.</param>
         /// <param name="merge">If set to <c>true</c> merge otherwise just upload.</param>
         /// <typeparam name="T">The document type.</typeparam>
-        public async Task IndexDocumentsAsync<T>(IEnumerable<T> documents, bool merge = true) where T: class
+        public async Task IndexDocumentsAsync<T>(IList<T> documents, bool merge = true) where T: class
         {
-            var chunks = documents.Select((x, i) => new { Index = i, Value = x }).GroupBy(x => x.Index / BatchSize).Select(x => x.Select(v => v.Value.MapToIndex()));
+            var max = documents.Count();
 
-            foreach(var chunk in chunks)
+            for (var i = 0; i < max; i += MaxBatchSize)
             {
+                var items = new List<ShushuIndex>();
+
+                for (var i2 = 0; i2 < MaxBatchSize && i + i2 < max; i2++)
+                {
+                    var item = documents[i + i2].MapToIndex();
+                    System.Console.WriteLine(item.GetType());
+                    items.Add(item);    
+                }
+
                 if (merge)
                 {
-                    var batch = IndexBatch.MergeOrUpload(chunk.Select(d => d.MapToIndex()));
+                    var batch = IndexBatch.MergeOrUpload(items);
                     await _indexClient.Documents.IndexAsync(batch);
                 }
                 else
                 {
-                    var batch = IndexBatch.Upload(chunk.Select(d => d.MapToIndex()));
+                    var batch = IndexBatch.Upload(items);
                     await _indexClient.Documents.IndexAsync(batch);
                 }
             }
+        }
+
+        /// <summary>
+        /// Counts all documents.
+        /// </summary>
+        /// <returns>The number of all documents in index.</returns>
+        public long CountAllDocuments()
+        {
+            var result = _indexClient.Documents.Count(null);
+            return result;
+        }
+
+        /// <summary>
+        /// Counts all documents.
+        /// </summary>
+        /// <returns>The number of all documents in index.</returns>
+        public async Task<long> CountAllDocumentsAsync()
+        {
+            var result = await _indexClient.Documents.CountAsync(null);
+            return result;
         }
 
         Index CreateIndex()

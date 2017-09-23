@@ -63,16 +63,17 @@ namespace Shushu.Tests
             _shushu.IndexDocuments(shushus);
         }
 
+        [TestMethod]
+        public void CountAllDocuments()
+        {
+            var n = _shushu.CountAllDocuments();
+            Assert.AreEqual(5, n);
+        }
+
         [TestCleanup]
         public void Cleanup()
         {
-            _shushu.DeleteIndex();
-        }
-
-        [TestMethod]
-        public void NoMappingPoco()
-        {
-            // todo
+            //_shushu.DeleteIndex();
         }
     }
 }

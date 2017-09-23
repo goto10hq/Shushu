@@ -174,12 +174,12 @@ namespace Shushu
         {
             lock (_lockProperties)
             {
-                var propertyMappins = MapperCore.Instance.ClassCache.Get(typeof(T)) as List<PropertyMapping>;
+                var propertyMappings = MapperCore.Instance.ClassCache.Get(typeof(T)) as List<PropertyMapping>;
 
-                if (propertyMappins == null)
+                if (propertyMappings == null)
                 {
                     var props = typeof(T).GetProperties();
-                    propertyMappins = new List<PropertyMapping>();
+                    propertyMappings = new List<PropertyMapping>();
 
                     foreach (var p in props)
                     {
@@ -191,18 +191,18 @@ namespace Shushu
                             {
                                 pm.Property = p.Name;
 
-                                if (propertyMappins.Any(prop => prop.IndexField == pm.IndexField))
+                                if (propertyMappings.Any(prop => prop.IndexField == pm.IndexField))
                                     throw new Exception($"Multiple property mapping for index field ${pm.IndexField}.");
 
-                                propertyMappins.Add(pm);
+                                propertyMappings.Add(pm);
                             }
                         }
                     }
 
-                    MapperCore.Instance.PropertiesCache.Set(typeof(T), propertyMappins);
+                    MapperCore.Instance.PropertiesCache.Set(typeof(T), propertyMappings);
                 }
 
-                return propertyMappins;
+                return propertyMappings;
             }
         }
 
