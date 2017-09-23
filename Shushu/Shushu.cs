@@ -21,6 +21,7 @@ namespace Shushu
         /// </summary>
         /// <remarks>Note that you can only include up to 1000 documents (or 16 MB) in a single indexing request</remarks>
         const int MaxBatchSize = 1000;
+        readonly string _indexKey = Enums.IndexField.Id.ToString().ToCamelCase();
 
         SearchServiceClient _serviceClient;
         SearchIndexClient _searchClient;
@@ -104,7 +105,7 @@ namespace Shushu
         /// <param name="id">Identifier (key).</param>
         public void DeleteDocument(string id)
         {
-            var batch = IndexBatch.Delete(new List<string> { id });
+            var batch = IndexBatch.Delete(_indexKey, new List<string> { id });
             _indexClient.Documents.Index(batch);
         }
 
@@ -114,7 +115,7 @@ namespace Shushu
         /// <param name="id">Identifier (key).</param>
         public async Task DeleteDocumentAsync(string id)
         {
-            var batch = IndexBatch.Delete(new List<string> { id });
+            var batch = IndexBatch.Delete(_indexKey, new List<string> { id });
             await _indexClient.Documents.IndexAsync(batch);
         }
 
@@ -124,7 +125,7 @@ namespace Shushu
         /// <param name="ids">Identifiers (keys).</param>
         public void DeleteDocuments(IEnumerable<string> ids)
         {
-            var batch = IndexBatch.Delete(ids);
+            var batch = IndexBatch.Delete(_indexKey, ids);
             _indexClient.Documents.Index(batch);
         }
 
@@ -134,7 +135,7 @@ namespace Shushu
         /// <param name="ids">Identifiers (keys).</param>
         public async Task DeleteDocumentsAsync(IEnumerable<string> ids)
         {
-            var batch = IndexBatch.Delete(ids);
+            var batch = IndexBatch.Delete(_indexKey, ids);
             await _indexClient.Documents.IndexAsync(batch);
         }
 

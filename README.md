@@ -181,6 +181,12 @@ var sp = new SearchParameters
 var result = _shushu.SearchDocuments<Shu>("*", sp);
 ```
 
+## Tests
+
+Azure Search can be tricky because indexing itself takes some time. That's why I was forced to use `Thread.Sleep()`.
+
+If you want to run tests on your own, you have to set `AppSettings.json` or provide `secrets` named `shushu`.
+
 ## TODO
 
 - check types of properties being indexed (is conversion valid?)
