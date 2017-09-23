@@ -150,6 +150,10 @@ shushu.IndexDocument(shu);
 
 If you get document(s) from Azure Search they are mapped back to your POCO.
 
+```csharp
+var shu = shushu.GetDocument<Shu>("1");
+```
+
 You can try mapping: `var poco = shushu.MapFromIndex<Poco>();`
 
 ## TODO
