@@ -159,3 +159,7 @@ You can try mapping: `var poco = shushu.MapFromIndex<Poco>();`
 ## TODO
 
 - check types of properties being indexed (is conversion valid?)
+
+## License
+
+MIT © [Joey Frohikey](http://frohikey.com)
