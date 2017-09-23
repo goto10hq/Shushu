@@ -84,9 +84,17 @@ Note:
 
 ### Methods
 
-`DeleteIndex` - delete index
-`IndexDocument(document, merge)` - upload or upload+merge and index one document
-`IndexDocuments(documents, merge)` - upload or upload+merge and index documents (automatically served in chunks divided into 1000)
+`DeleteIndex`
+
+Delete index.
+
+`IndexDocument(document, merge)`
+
+Upload or upload+merge and index one document.
+
+`IndexDocuments(documents, merge)` 
+
+Upload or upload+merge and index documents (automatically served in chunks divided into 1000).
 
 Note:
 - all methods have `async` variants
