@@ -68,13 +68,11 @@ namespace Shushu.Tests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(Exception), "Object has not Id field index defined but has been accepted.")]
         public void NoMappingPoco()
         {
             var u = new Umiko { Test = "test" };
             var search = u.MapToIndex();
-
-            Assert.AreEqual(null, search.Entity);
-            Assert.AreEqual(null, search.Text0);
         }
 
         [TestMethod]

@@ -5,10 +5,10 @@ using System.Reflection;
 using Sushi2;
 using Microsoft.Spatial;
 using Microsoft.Azure.Search.Models;
+using System.Linq;
 
 namespace Shushu
 {
-    // TODO: force definition of index field ID?
     // TODO: check types when mapping?
     internal class MapperCore
     {
@@ -39,7 +39,14 @@ namespace Shushu
 
             // get mappings
             var classMappings = MapperHelpers.GetClassMappings<T>();
-            var propertyMappins = MapperHelpers.GetPropertyMappings<T>();
+            var propertyMappings = MapperHelpers.GetPropertyMappings<T>();
+
+            // check if id mapping exists
+            if (classMappings.All(x => x.IndexField != Enums.IndexField.Id) &&
+               propertyMappings.All(x => x.IndexField != Enums.IndexField.Id))
+            {
+                throw new Exception("You have to define a mapping for index field Id.");
+            }
 
             // create azure search instance
             var search = new AzureSearch();
@@ -51,7 +58,7 @@ namespace Shushu
             }
 
             // set property mappings
-            foreach (var pm in propertyMappins)
+            foreach (var pm in propertyMappings)
             {
                 var value = obj.GetPropertyValue(pm.Property);
 
