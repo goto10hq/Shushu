@@ -105,6 +105,10 @@ Upload or upload+merge and index documents (automatically served in chunks divid
 
 Delete index.
 
+`DocumentSearchResult<T> SearchDocuments<T>(string searchText, SearchParameters searchParameters)`
+
+Search documents.
+
 Note:
 - all methods have `async` variants
 
@@ -155,6 +159,19 @@ var shu = shushu.GetDocument<Shu>("1");
 ```
 
 You can try mapping: `var poco = shushu.MapFromIndex<Poco>();`
+
+And of course the most import part... searching itself. Again search parameters are replaced accordingly just use `@Property`.
+
+```csharp
+var sp = new SearchParameters
+{
+ Filter = "@Entity eq 'shushu'",
+ Top = 5,
+ OrderBy = new List<string> { "@Iq desc" }
+};
+
+var result = _shushu.SearchDocuments<Shu>("*", sp);
+```
 
 ## TODO
 

@@ -184,6 +184,59 @@ namespace Shushu
             return shushu.MapFromIndex<T>();
         }
 
+        /// <summary>
+        /// Searchs the documents.
+        /// </summary>
+        /// <returns>The documents.</returns>
+        /// <param name="searchText">Search text.</param>
+        /// <param name="searchParameters">Search parameters.</param>
+        /// <typeparam name="T">The type of object.</typeparam>
+        public DocumentSearchResult<T> SearchDocuments<T>(string searchText, SearchParameters searchParameters) where T : class, new()
+        {
+            return AsyncTools.RunSync(() => SearchDocumentsAsync<T>(searchText, searchParameters));
+        }
+
+        /// <summary>
+        /// Searchs the documents.
+        /// </summary>
+        /// <returns>The documents.</returns>
+        /// <param name="searchText">Search text.</param>
+        /// <param name="searchParameters">Search parameters.</param>
+        /// <typeparam name="T">The type of object.</typeparam>
+        public async Task<DocumentSearchResult<T>> SearchDocumentsAsync<T>(string searchText, SearchParameters searchParameters) where T : class, new()
+        {
+            var originalSearchResult = await _indexClient.Documents.SearchAsync<ShushuIndex>(searchText, searchParameters.MapSearchParameters<T>());
+
+            var documentSearchResult = new DocumentSearchResult<T>
+            {
+                 ContinuationToken = originalSearchResult.ContinuationToken,
+                 Count = originalSearchResult.Count,
+                 Coverage = originalSearchResult.Coverage,
+                 Facets = originalSearchResult.Facets,
+            };
+
+            if (originalSearchResult != null)
+            {
+                var searchResults = new List<SearchResult<T>>();
+
+                foreach(var result in originalSearchResult.Results)
+                {
+                    var newResult = new SearchResult<T>
+                    {
+                        Highlights = result.Highlights,
+                        Score = result.Score,
+                        Document = result.Document.MapFromIndex<T>()
+                    };
+
+                    searchResults.Add(newResult);
+                }
+
+                documentSearchResult.Results = searchResults;
+            }
+
+            return documentSearchResult;
+        }
+
         Index CreateIndex()
         {
             var result = _serviceClient.Indexes.List();

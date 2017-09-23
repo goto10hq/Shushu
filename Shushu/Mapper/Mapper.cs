@@ -45,7 +45,7 @@ namespace Shushu
             // set class mappings
             foreach (var cm in classMappings)
             {
-                shushu.GetType().GetTypeInfo().GetProperty(cm.IndexField.ToString()).SetValue(shushu, cm.Value);
+                shushu.GetType().GetTypeInfo().GetProperty(cm.IndexField.ToString())?.SetValue(shushu, cm.Value);
             }
 
             // set property mappings
@@ -59,11 +59,11 @@ namespace Shushu
                         @value is GeoPoint gp)
                     {
                         @value = GeographyPoint.Create(gp.Coordinates[0], gp.Coordinates[1]);
-                        shushu.GetType().GetTypeInfo().GetProperty(pm.IndexField.ToString()).SetValue(shushu, @value);
+                        shushu.GetType().GetTypeInfo().GetProperty(pm.IndexField.ToString())?.SetValue(shushu, @value);
                     }
                     else
                     {
-                        shushu.GetType().GetTypeInfo().GetProperty(pm.IndexField.ToString()).SetValue(shushu, @value);
+                        shushu.GetType().GetTypeInfo().GetProperty(pm.IndexField.ToString())?.SetValue(shushu, @value);
                     }
                 }
             }
@@ -119,11 +119,11 @@ namespace Shushu
                         @value is GeoPoint gp)
                     {
                         @value = GeographyPoint.Create(gp.Coordinates[0], gp.Coordinates[1]);
-                        obj.GetType().GetTypeInfo().GetProperty(pm.Property).SetValue(obj, @value);
+                        obj.GetType().GetTypeInfo().GetProperty(pm.Property)?.SetValue(obj, @value);
                     }
                     else
                     {
-                        obj.GetType().GetTypeInfo().GetProperty(pm.Property).SetValue(obj, @value);
+                        obj.GetType().GetTypeInfo().GetProperty(pm.Property)?.SetValue(obj, @value);
                     }
                 }
             }

@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shushu.Attributes;
 using System.IO;
 using System.Collections.Generic;
+using Microsoft.Azure.Search.Models;
 
 namespace Shushu.Tests
 {
@@ -57,7 +58,7 @@ namespace Shushu.Tests
             {
                 new Shu("3", "aoba", 140),
                 new Shu("4", "momiji", 110),
-                new Shu("5", "hifumi", 110),
+                new Shu("5", "hifumi", 115),
             };
 
             _shushu.IndexDocuments(shushus);
@@ -78,6 +79,39 @@ namespace Shushu.Tests
             Assert.AreEqual("3", shu.Id);
             Assert.AreEqual("aoba", shu.Name);
             Assert.AreEqual(140, shu.Iq);
+        }
+
+        [TestMethod]
+        public void SearchDocumentsSimpleWithOrderBy()
+        {
+            var sp = new SearchParameters
+            {
+                Filter = "@Entity eq 'shushu'",
+                Top = 1,
+                OrderBy = new List<string> { "@Iq" }
+            };
+
+            var result = _shushu.SearchDocuments<Shu>("*", sp);
+
+            Assert.AreEqual(1, result.Results.Count);
+            Assert.AreEqual(4, result.Results[0].Document.Id);
+        }
+
+        [TestMethod]
+        public void SearchDocumentsSimpleWithOrderByDesc()
+        {
+            var sp = new SearchParameters
+            {
+                Filter = "@Entity eq 'shushu'",
+                Top = 2,
+                OrderBy = new List<string> { "@Iq desc" }
+            };
+
+            var result = _shushu.SearchDocuments<Shu>("*", sp);
+
+            Assert.AreEqual(2, result.Results.Count);
+            Assert.AreEqual(2, result.Results[0].Document.Id);
+            Assert.AreEqual(3, result.Results[1].Document.Id);
         }
 
         [TestCleanup]
