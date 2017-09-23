@@ -89,6 +89,10 @@ Note:
 
 Count all documents in index.
 
+`T GetDocument<T>(string key)`
+
+Get one document by identifier (key)
+
 `IndexDocument<T>(T document, bool merge)`
 
 Upload or upload+merge and index one document.
@@ -137,12 +141,16 @@ Notes:
 
 You can try mapping: `var search = a.MapToIndex();`
 
-Or just create Shushu instance and index it:
+Or just create Shushu instance and index it and it will be mapped automatically:
 
 ```csharp
 var shu = new Shu("1", "nene", 130);
 shushu.IndexDocument(shu);
 ```
+
+If you get document(s) from Azure Search they are mapped back to your POCO.
+
+You can try mapping: `var poco = shushu.MapFromIndex<Poco>();`
 
 ## TODO
 

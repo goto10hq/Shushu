@@ -70,6 +70,16 @@ namespace Shushu.Tests
             Assert.AreEqual(5, n);
         }
 
+        [TestMethod]
+        public void GetDocument()
+        {
+            var shu = _shushu.GetDocument<Shu>("3");
+
+            Assert.AreEqual("3", shu.Id);
+            Assert.AreEqual("aoba", shu.Name);
+            Assert.AreEqual(140, shu.Iq);
+        }
+
         [TestCleanup]
         public void Cleanup()
         {

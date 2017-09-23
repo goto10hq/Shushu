@@ -160,6 +160,30 @@ namespace Shushu
             return result;
         }
 
+        /// <summary>
+        /// Gets the document.
+        /// </summary>
+        /// <returns>The document.</returns>
+        /// <param name="id">Identifier (key).</param>
+        /// <typeparam name="T">The type of object.</typeparam>
+        public T GetDocument<T>(string id) where T : class, new()
+        {
+            return AsyncTools.RunSync(() => GetDocumentAsync<T>(id));
+        }
+
+        /// <summary>
+        /// Gets the document.
+        /// </summary>
+        /// <returns>The document.</returns>
+        /// <param name="key">Key.</param>
+        /// <typeparam name="T">The type of object.</typeparam>
+        public async Task<T> GetDocumentAsync<T>(string key) where T : class, new()
+        {
+            var shushu = await _indexClient.Documents.GetAsync<ShushuIndex>(key);
+
+            return shushu.MapFromIndex<T>();
+        }
+
         Index CreateIndex()
         {
             var result = _serviceClient.Indexes.List();

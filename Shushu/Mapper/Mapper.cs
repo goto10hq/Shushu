@@ -51,24 +51,84 @@ namespace Shushu
             // set property mappings
             foreach (var pm in propertyMappings)
             {
-                var value = obj.GetPropertyValue(pm.Property);
+                var @value = obj.GetPropertyValue(pm.Property);
 
-                if (value != null)
+                if (@value != null)
                 {
                     if (pm.IndexField == Enums.IndexField.Point0 &&
-                        value is GeoPoint gp)
+                        @value is GeoPoint gp)
                     {
-                        value = GeographyPoint.Create(gp.Coordinates[0], gp.Coordinates[1]);
-                        shushu.GetType().GetTypeInfo().GetProperty(pm.IndexField.ToString()).SetValue(shushu, value);
+                        @value = GeographyPoint.Create(gp.Coordinates[0], gp.Coordinates[1]);
+                        shushu.GetType().GetTypeInfo().GetProperty(pm.IndexField.ToString()).SetValue(shushu, @value);
                     }
                     else
                     {
-                        shushu.GetType().GetTypeInfo().GetProperty(pm.IndexField.ToString()).SetValue(shushu, value);
+                        shushu.GetType().GetTypeInfo().GetProperty(pm.IndexField.ToString()).SetValue(shushu, @value);
                     }
                 }
             }
 
             return shushu;
+        }
+
+        /// <summary>
+        /// Maps the Shushu index to object.
+        /// </summary>
+        /// <returns>The object index.</returns>
+        /// <param name="index">The Shushu index.</param>
+        /// <typeparam name="T">The type of object.</typeparam>
+        public static T MapFromIndex<T>(this ShushuIndex index) where T : class, new()
+        {
+            var obj = new T();
+
+            if (index == null)
+                throw new ArgumentNullException(nameof(index));
+
+            // no mappings needed for Shushu objects
+            if (typeof(T) == typeof(ShushuIndex))
+                return obj;
+
+            // get mappings
+            var classMappings = MapperHelpers.GetClassMappings<T>();
+            var propertyMappings = MapperHelpers.GetPropertyMappings<T>();
+
+            // check if id mapping exists
+            if (classMappings.All(x => x.IndexField != Enums.IndexField.Id) &&
+               propertyMappings.All(x => x.IndexField != Enums.IndexField.Id))
+            {
+                throw new Exception($"You have to define a mapping for index field Id in {typeof(T)}.");
+            }
+
+            // set class mappings
+            foreach (var cm in classMappings)
+            {
+                var prop = typeof(T).GetTypeInfo().GetProperty(cm.IndexField.ToString());
+
+                if (prop != null)
+                    prop.SetValue(obj, cm.Value);
+            }
+
+            // set property mappings
+            foreach (var pm in propertyMappings)
+            {
+                var @value = index.GetPropertyValue(pm.IndexField.ToString());
+
+                if (@value != null)
+                {
+                    if (pm.IndexField == Enums.IndexField.Point0 &&
+                        @value is GeoPoint gp)
+                    {
+                        @value = GeographyPoint.Create(gp.Coordinates[0], gp.Coordinates[1]);
+                        obj.GetType().GetTypeInfo().GetProperty(pm.Property).SetValue(obj, @value);
+                    }
+                    else
+                    {
+                        obj.GetType().GetTypeInfo().GetProperty(pm.Property).SetValue(obj, @value);
+                    }
+                }
+            }
+
+            return obj;
         }
 
         /// <summary>
