@@ -1,7 +1,13 @@
 ﻿namespace Shushu
 {
+    /// <summary>
+    /// Enums.
+    /// </summary>
     public static class Enums
     {
+        /// <summary>
+        /// Index fields.
+        /// </summary>
         public enum IndexField
         {
             Id = 0,

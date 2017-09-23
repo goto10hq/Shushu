@@ -7,37 +7,79 @@ using System.Collections.Generic;
 
 namespace Shushu
 {
+    /// <summary>
+    /// Shushu.
+    /// </summary>
     public class Shushu
     {
-        public readonly SearchServiceClient ServiceClient;
-        public readonly SearchIndexClient SearchClient;
-        public readonly SearchIndexClient IndexClient;
+        SearchServiceClient _serviceClient;
+        SearchIndexClient _searchClient;
+        SearchIndexClient _indexClient;
 
-        string _name;
-        string _serviceApiKey;
-        string _searchApiKey;
         string _index;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:Shushu.Shushu"/> class.
+        /// </summary>
+        /// <param name="name">Name.</param>
+        /// <param name="serviceApiKey">Service API key.</param>
+        /// <param name="searchApiKey">Search API key.</param>
+        /// <param name="index">Index.</param>
         public Shushu(string name, string serviceApiKey, string searchApiKey, string index)
         {
-            _name = name;
-            _serviceApiKey = serviceApiKey;
-            _searchApiKey = searchApiKey;
             _index = index;
 
-            ServiceClient = new SearchServiceClient(name, new SearchCredentials(serviceApiKey));
-            SearchClient = new SearchIndexClient(name, index, new SearchCredentials(searchApiKey));
-            IndexClient = new SearchIndexClient(name, index, new SearchCredentials(serviceApiKey));
+            _serviceClient = new SearchServiceClient(name, new SearchCredentials(serviceApiKey));
+            _searchClient = new SearchIndexClient(name, index, new SearchCredentials(searchApiKey));
+            _indexClient = new SearchIndexClient(name, index, new SearchCredentials(serviceApiKey));
 
-            var ind = ServiceClient.Indexes.List().Indexes.FirstOrDefault(x => x.Name.Equals(index));
+            var ind = _serviceClient.Indexes.List().Indexes.FirstOrDefault(x => x.Name.Equals(index));
 
             if (ind == null)
                 CreateIndex();            
         }
-        
+
+        /// <summary>
+        /// Deletes the index.
+        /// </summary>
+        public void DeleteIndex()
+        {
+            AsyncTools.RunSync(DeleteIndexAsync);
+        }
+
+        /// <summary>
+        /// Deletes the index.
+        /// </summary>
+        /// <returns>The index.</returns>
+        public async Task DeleteIndexAsync()
+        {
+            await _serviceClient.Indexes.DeleteAsync(_index);
+        }
+
+        /// <summary>
+        /// Indexs the document.
+        /// </summary>
+        /// <param name="document">Document.</param>
+        public void IndexDocument(object document)
+        {
+            AsyncTools.RunSync(() => IndexDocumentAsync(document));
+        }
+
+        /// <summary>
+        /// Indexs the document.
+        /// </summary>
+        /// <returns>The document.</returns>
+        /// <param name="document">Document.</param>
+        public async Task IndexDocumentAsync(object document)
+        {
+            var documents = new List<Tokens.AzureSearch> { document.MapIndex() };
+            var batch = IndexBatch.Upload(documents);
+            await _indexClient.Documents.IndexAsync(batch);
+        }
+
         Index CreateIndex()
         {
-            var result = ServiceClient.Indexes.List();
+            var result = _serviceClient.Indexes.List();
             var indexes = result.Indexes;
             
             var definition = new Index
@@ -46,29 +88,7 @@ namespace Shushu
                 Fields = FieldBuilder.BuildForType<Tokens.AzureSearch>()
             };
 
-            return ServiceClient.Indexes.Create(definition);
+            return _serviceClient.Indexes.Create(definition);
         }        
-
-        public void DeleteIndex()
-        {
-            AsyncTools.RunSync(DeleteIndexAsync);
-        }
-
-        public async Task DeleteIndexAsync()
-        {
-            await ServiceClient.Indexes.DeleteAsync(_index);
-        }
-
-        public void IndexDocument(object document)
-        {
-            AsyncTools.RunSync(() => IndexDocumentAsync(document));
-        }
-
-        public async Task IndexDocumentAsync(object document)
-        {
-            var documents = new List<Tokens.AzureSearch> { document.MapIndex() };
-            var batch = IndexBatch.Upload(documents);
-            await IndexClient.Documents.IndexAsync(batch);
-        }
     }
 }
