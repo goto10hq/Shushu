@@ -102,6 +102,20 @@ namespace Shushu.Tests
         }
 
         [TestMethod]
+        public void MappingAzureSearchDirectly()
+        {
+            var dt = DateTime.Now;
+            var a = new AzureSearch { Id = "foo", Text0 = "bar", Date0 = dt };
+
+            var search = a.MapIndex();
+
+            Assert.AreEqual(a.Id, search.Id);
+            Assert.AreEqual(a.Text0, search.Text0);
+            Assert.AreEqual(a.Text1, search.Text1);
+            Assert.AreEqual(a.Date0, search.Date0);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(Exception), "Duplicated class mappings were inappropriately allowed.")]
         public void TestDuplicatedClassMappings()
         {

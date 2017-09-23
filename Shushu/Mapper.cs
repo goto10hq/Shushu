@@ -38,6 +38,10 @@ namespace Shushu
             if (obj == null)
                 throw new ArgumentNullException(nameof(obj));
 
+            // no mappings needed for AzureSearch objects
+            if (typeof(T) == typeof(AzureSearch))
+                return obj as AzureSearch;
+
             // get mappings
             var classMappings = GetClassMappings<T>();
             var propertyMappins = GetPropertyMappings<T>();            

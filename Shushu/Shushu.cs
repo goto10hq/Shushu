@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.Azure.Search.Models;
 using System.Collections.Generic;
+using Shushu.Tokens;
 
 namespace Shushu
 {
@@ -60,7 +61,7 @@ namespace Shushu
         /// Indexs the document.
         /// </summary>
         /// <param name="document">Document.</param>
-        public void IndexDocument(object document)
+        public void IndexDocument<T>(T document) where T: class
         {
             AsyncTools.RunSync(() => IndexDocumentAsync(document));
         }
@@ -70,9 +71,9 @@ namespace Shushu
         /// </summary>
         /// <returns>The document.</returns>
         /// <param name="document">Document.</param>
-        public async Task IndexDocumentAsync(object document)
+        public async Task IndexDocumentAsync<T>(T document) where T: class
         {
-            var documents = new List<Tokens.AzureSearch> { document.MapIndex() };
+            var documents = new List<AzureSearch> { document.MapIndex() };
             var batch = IndexBatch.Upload(documents);
             await _indexClient.Documents.IndexAsync(batch);
         }
@@ -85,7 +86,7 @@ namespace Shushu
             var definition = new Index
             {
                 Name = _index,
-                Fields = FieldBuilder.BuildForType<Tokens.AzureSearch>()
+                Fields = FieldBuilder.BuildForType<AzureSearch>()
             };
 
             return _serviceClient.Indexes.Create(definition);
