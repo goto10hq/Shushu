@@ -22,8 +22,7 @@ namespace Shushu
         /// <remarks>Note that you can only include up to 1000 documents (or 16 MB) in a single indexing request</remarks>
         const int MaxBatchSize = 1000;
         readonly string _indexKey = Enums.IndexField.Id.ToString().ToCamelCase();
-
-        SearchServiceClient _serviceClient;
+        readonly SearchServiceClient _serviceClient;
         SearchIndexClient _searchClient;
         SearchIndexClient _indexClient;
         readonly string _index;
@@ -189,7 +188,7 @@ namespace Shushu
         /// <returns>The number of all documents in index.</returns>
         public long CountAllDocuments()
         {
-            var result = _indexClient.Documents.Count(null);
+            var result = _searchClient.Documents.Count(null);
             return result;
         }
 
@@ -199,7 +198,7 @@ namespace Shushu
         /// <returns>The number of all documents in index.</returns>
         public async Task<long> CountAllDocumentsAsync()
         {
-            var result = await _indexClient.Documents.CountAsync(null);
+            var result = await _searchClient.Documents.CountAsync(null);
             return result;
         }
 
@@ -222,7 +221,7 @@ namespace Shushu
         /// <typeparam name="T">The type of object.</typeparam>
         public async Task<T> GetDocumentAsync<T>(string key) where T : class, new()
         {
-            var shushu = await _indexClient.Documents.GetAsync<ShushuIndex>(key);
+            var shushu = await _searchClient.Documents.GetAsync<ShushuIndex>(key);
 
             return shushu.MapFromIndex<T>();
         }
@@ -248,7 +247,7 @@ namespace Shushu
         /// <typeparam name="T">The type of object.</typeparam>
         public async Task<DocumentSearchResult<T>> SearchDocumentsAsync<T>(string searchText, SearchParameters searchParameters) where T : class, new()
         {
-            var originalSearchResult = await _indexClient.Documents.SearchAsync<ShushuIndex>(searchText, searchParameters.MapSearchParameters<T>());
+            var originalSearchResult = await _searchClient.Documents.SearchAsync<ShushuIndex>(searchText, searchParameters.MapSearchParameters<T>());
 
             var documentSearchResult = new DocumentSearchResult<T>
             {
