@@ -99,6 +99,46 @@ namespace Shushu
         }
 
         /// <summary>
+        /// Deletes the document.
+        /// </summary>
+        /// <param name="id">Identifier (key).</param>
+        public void DeleteDocument(string id)
+        {
+            var batch = IndexBatch.Delete(new List<string> { id });
+            _indexClient.Documents.Index(batch);
+        }
+
+        /// <summary>
+        /// Deletes the document.
+        /// </summary>
+        /// <param name="id">Identifier (key).</param>
+        public async Task DeleteDocumentAsync(string id)
+        {
+            var batch = IndexBatch.Delete(new List<string> { id });
+            await _indexClient.Documents.IndexAsync(batch);
+        }
+
+        /// <summary>
+        /// Deletes the documents.
+        /// </summary>
+        /// <param name="ids">Identifiers (keys).</param>
+        public void DeleteDocuments(IEnumerable<string> ids)
+        {
+            var batch = IndexBatch.Delete(ids);
+            _indexClient.Documents.Index(batch);
+        }
+
+        /// <summary>
+        /// Deletes the documents.
+        /// </summary>
+        /// <param name="ids">Identifiers (keys).</param>
+        public async Task DeleteDocumentsAsync(IEnumerable<string> ids)
+        {
+            var batch = IndexBatch.Delete(ids);
+            await _indexClient.Documents.IndexAsync(batch);
+        }
+
+        /// <summary>
         /// Index documents.
         /// </summary>
         /// <param name="documents">The list of documents.</param>

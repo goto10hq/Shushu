@@ -89,7 +89,19 @@ Note:
 
 Count all documents in index.
 
-`T GetDocument<T>(string key)`
+`DeleteDocument(string id)`
+
+Delete document from index.
+
+`DeleteDocuments(IEnumerable<string> ids)`
+
+Delete documents from index.
+
+`DeleteIndex()`
+
+Delete index.
+
+`T GetDocument<T>(string id)`
 
 Get one document by identifier (key)
 
@@ -100,10 +112,6 @@ Upload or upload+merge and index one document.
 `IndexDocuments<T>(IList<T> documents, bool merge)` 
 
 Upload or upload+merge and index documents (automatically served in chunks divided into 1000).
-
-`DeleteIndex()`
-
-Delete index.
 
 `DocumentSearchResult<T> SearchDocuments<T>(string searchText, SearchParameters searchParameters)`
 
