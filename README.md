@@ -12,9 +12,9 @@
 
 __Azure Search__ has kinda not super firendly teirs for situations when you have zillions of various document types organized in relatively small batches. In such cases it would becomes quite handy to have a possibility to just have one __universal index__. Unfortunately it's quite cumbersome to make mappings like:
 
-``
+```
 Title -> Text0, Author -> Text1, ...
-``
+```
 
 Here comes __Shushu__ to smooth things up.
 
@@ -34,7 +34,7 @@ public string Entity { get; set; }
 [Analyzer("standardasciifolding.lucene")]
 [IsFilterable]        
 public string Text0 { get; set; }
-public string Text19 { get; set; 
+public string Text19 { get; set; }
 
 [IsSortable]
 [IsFilterable]
@@ -68,8 +68,69 @@ public bool? Flag9 { get; set; }
 [IsFilterable]
 [IsSortable]
 public GeographyPoint Point0 { get; set; }
-```     
+```  
+
+## Shushu object
+
+There's Shushu object for some basic operations or you can you Azure Search SDK directly of course.
+Just create an instance:
+
+```csharp
+var shushu = new Shushu(name_of_the_service, service_api_key, search_api_key, name_of_the_index);
+```
+
+Note:
+- Shushu tries to create index if it does not exist
+
+### Methods
+
+`DeleteIndex` - delete index
+`IndexDocument(document, merge)` - upload or upload+merge and index one document
+`IndexDocuments(documents, merge)` - upload or upload+merge and index documents (automatically served in chunks divided into 1000)
+
+Note:
+- all methods have `async` variants
+
+## Mapping
+
+We have two mapping attributes:
+- `ClassMapping` - global settings basically for constant values 
+- `PropertyMapping` - mapping property to __AzureSearch__ and vice versa
+
+Decorate your POCO with attributes e.g.
+
+```csharp
+[ClassMapping(Enums.IndexField.Entity, "shushu")]    
+[ClassMapping(Enums.IndexField.Flag0, true)] 
+public class Shu
+{
+ [PropertyMapping(Enums.IndexField.Id)]
+ public string Id { get; set; }
+
+ [PropertyMapping(Enums.IndexField.Text0)]
+ public string Name { get; set; }
+
+ [PropertyMapping(Enums.IndexField.Number0)]
+ public int Iq { get; set; }
+
+ public Shu() {}
+ public Shu(string id, string name, int iq) { Id = id; Name = name; Iq = iq; }
+}
+``` 
+
+Notes:
+- you have to set a mapping for Id field
+- duplicated mappings are not allowed
+
+You can try mapping: `var search = a.MapToIndex();`
+
+Or just create Shushu instance and index it:
+
+```csharp
+var shu = new Shu("1", "nene", 130);
+shushu.IndexDocument(shu);
+```
 
 ## TODO
 
-- check types of properties being indexes
+- check types of properties being indexed (is conversion valid?)
