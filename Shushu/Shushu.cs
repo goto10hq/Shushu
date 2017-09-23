@@ -73,7 +73,7 @@ namespace Shushu
         /// <param name="document">Document.</param>
         public async Task IndexDocumentAsync<T>(T document) where T: class
         {
-            var documents = new List<AzureSearch> { document.MapIndex() };
+            var documents = new List<AzureSearch> { document.MapToIndex() };
             var batch = IndexBatch.Upload(documents);
             await _indexClient.Documents.IndexAsync(batch);
         }

@@ -71,7 +71,7 @@ namespace Shushu.Tests
         public void NoMappingPoco()
         {
             var u = new Umiko { Test = "test" };
-            var search = u.MapIndex();
+            var search = u.MapToIndex();
 
             Assert.AreEqual(null, search.Entity);
             Assert.AreEqual(null, search.Text0);
@@ -82,7 +82,7 @@ namespace Shushu.Tests
         {
             var a = new Aoba { Id = "id-6502", IgnoreMe = false, Title = "Umiko", Tags = new List<string> { "hi", "ho" }, Location = new GeoPoint(130.56, 220.44), Clever = true };
 
-            var search = a.MapIndex();
+            var search = a.MapToIndex();
 
             // class mappings
             Assert.AreEqual("myproject/aoba", search.Entity);
@@ -107,7 +107,7 @@ namespace Shushu.Tests
             var dt = DateTime.Now;
             var a = new AzureSearch { Id = "foo", Text0 = "bar", Date0 = dt };
 
-            var search = a.MapIndex();
+            var search = a.MapToIndex();
 
             Assert.AreEqual(a.Id, search.Id);
             Assert.AreEqual(a.Text0, search.Text0);
@@ -120,7 +120,7 @@ namespace Shushu.Tests
         public void TestDuplicatedClassMappings()
         {
             var poco = new ErrorClassPoco();
-            var search = poco.MapIndex();
+            var search = poco.MapToIndex();
         }
 
         [TestMethod]
@@ -128,7 +128,7 @@ namespace Shushu.Tests
         public void TestDuplicatedPropertyMappings()
         {
             var poco = new ErrorPropertyPoco();
-            var search = poco.MapIndex();
+            var search = poco.MapToIndex();
         }
 
         [TestMethod]        
@@ -139,7 +139,7 @@ namespace Shushu.Tests
                 OrderBy = new List<string> { "@Iq", "@Location", "foo" }                
             };
 
-            p = p.MapSearchParameters<Aoba>();
+            p = p.MapToSearchParameters<Aoba>();
 
             Assert.AreEqual(p.OrderBy.Count, 3);
             Assert.AreEqual("number0", p.OrderBy[0]);
@@ -155,7 +155,7 @@ namespace Shushu.Tests
                 Select = new List<string> { "@Iq", "@Location", "foo" }
             };
 
-            p = p.MapSearchParameters<Aoba>();
+            p = p.MapToSearchParameters<Aoba>();
 
             Assert.AreEqual(p.Select.Count, 3);
             Assert.AreEqual("number0", p.Select[0]);
@@ -171,7 +171,7 @@ namespace Shushu.Tests
                 HighlightFields = new List<string> { "@Iq", "@Location", "foo" }
             };
 
-            p = p.MapSearchParameters<Aoba>();
+            p = p.MapToSearchParameters<Aoba>();
 
             Assert.AreEqual(p.HighlightFields.Count, 3);
             Assert.AreEqual("number0", p.HighlightFields[0]);
@@ -187,7 +187,7 @@ namespace Shushu.Tests
                 SearchFields = new List<string> { "@Iq", "@Location", "foo" }
             };
 
-            p = p.MapSearchParameters<Aoba>();
+            p = p.MapToSearchParameters<Aoba>();
 
             Assert.AreEqual(p.SearchFields.Count, 3);
             Assert.AreEqual("number0", p.SearchFields[0]);
@@ -203,7 +203,7 @@ namespace Shushu.Tests
                 Facets = new List<string> { "@Iq:day", "@Location", "foo" }
             };
 
-            p = p.MapSearchParameters<Aoba>();
+            p = p.MapToSearchParameters<Aoba>();
 
             Assert.AreEqual(p.Facets.Count, 3);
             Assert.AreEqual("number0:day", p.Facets[0]);
@@ -219,7 +219,7 @@ namespace Shushu.Tests
                 Filter = "entity eq 'something' and @Title eq 'test'",                
             };
 
-            p = p.MapSearchParameters<Aoba>();
+            p = p.MapToSearchParameters<Aoba>();
 
             Assert.AreEqual("entity eq 'something' and text0 eq 'test'", p.Filter);            
         }
