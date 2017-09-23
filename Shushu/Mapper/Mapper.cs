@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using Shushu.Tokens;
+﻿using Shushu.Tokens;
 using System;
 using System.Reflection;
 using Sushi2;
@@ -72,7 +71,13 @@ namespace Shushu
             return search;
         }
 
-        public static SearchParameters MapToSearchParameters<T>(this SearchParameters searchParameters) where T : class
+        /// <summary>
+        /// Maps search parameters.
+        /// </summary>
+        /// <returns>New search parameters.</returns>
+        /// <param name="searchParameters">Original search parameters.</param>
+        /// <typeparam name="T">Type of class used for mapping.</typeparam>
+        public static SearchParameters MapSearchParameters<T>(this SearchParameters searchParameters) where T : class
         {
             var propertyMappings = MapperHelpers.GetPropertyMappings<T>();
             var classMappings = MapperHelpers.GetClassMappings<T>();

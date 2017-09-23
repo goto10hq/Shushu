@@ -114,7 +114,7 @@ namespace Shushu
         /// <typeparam name="T">The document type.</typeparam>
         public async Task IndexDocumentsAsync<T>(IEnumerable<T> documents, bool merge = true) where T: class
         {
-            var chunks = documents.Select((x, i) => new { Index = i, Value = x }).GroupBy(x => x.Index / BatchSize).Select(x => x.Select(v => v.Value.MapToIndex()));
+            var chunks = documents.Select((x, i) => new { Index = i, Value = x }).GroupBy(x => x.Index / BatchSize).Select(x => x.Select(v => v.Value.MapToIndex()).ToList()).ToList();
 
             foreach(var chunk in chunks)
             {

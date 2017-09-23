@@ -137,7 +137,7 @@ namespace Shushu.Tests
                 OrderBy = new List<string> { "@Iq", "@Location", "foo" }                
             };
 
-            p = p.MapToSearchParameters<Aoba>();
+            p = p.MapSearchParameters<Aoba>();
 
             Assert.AreEqual(p.OrderBy.Count, 3);
             Assert.AreEqual("number0", p.OrderBy[0]);
@@ -153,7 +153,7 @@ namespace Shushu.Tests
                 Select = new List<string> { "@Iq", "@Location", "foo" }
             };
 
-            p = p.MapToSearchParameters<Aoba>();
+            p = p.MapSearchParameters<Aoba>();
 
             Assert.AreEqual(p.Select.Count, 3);
             Assert.AreEqual("number0", p.Select[0]);
@@ -169,7 +169,7 @@ namespace Shushu.Tests
                 HighlightFields = new List<string> { "@Iq", "@Location", "foo" }
             };
 
-            p = p.MapToSearchParameters<Aoba>();
+            p = p.MapSearchParameters<Aoba>();
 
             Assert.AreEqual(p.HighlightFields.Count, 3);
             Assert.AreEqual("number0", p.HighlightFields[0]);
@@ -185,7 +185,7 @@ namespace Shushu.Tests
                 SearchFields = new List<string> { "@Iq", "@Location", "foo" }
             };
 
-            p = p.MapToSearchParameters<Aoba>();
+            p = p.MapSearchParameters<Aoba>();
 
             Assert.AreEqual(p.SearchFields.Count, 3);
             Assert.AreEqual("number0", p.SearchFields[0]);
@@ -201,7 +201,7 @@ namespace Shushu.Tests
                 Facets = new List<string> { "@Iq:day", "@Location", "foo" }
             };
 
-            p = p.MapToSearchParameters<Aoba>();
+            p = p.MapSearchParameters<Aoba>();
 
             Assert.AreEqual(p.Facets.Count, 3);
             Assert.AreEqual("number0:day", p.Facets[0]);
@@ -217,7 +217,7 @@ namespace Shushu.Tests
                 Filter = "entity eq 'something' and @Title eq 'test'",                
             };
 
-            p = p.MapToSearchParameters<Aoba>();
+            p = p.MapSearchParameters<Aoba>();
 
             Assert.AreEqual("entity eq 'something' and text0 eq 'test'", p.Filter);            
         }
