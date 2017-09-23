@@ -53,6 +53,12 @@ namespace Shushu.Tests
             _shushu.IndexDocument(s1);
         }
 
+        [TestCleanup]
+        public void Cleanup()
+        {
+            _shushu.DeleteIndex();
+        }
+
         [TestMethod]
         public void NoMappingPoco()
         {
