@@ -68,7 +68,7 @@ public bool? Flag9 { get; set; }
 [IsFilterable]
 [IsSortable]
 public GeographyPoint Point0 { get; set; }
-```  
+```
 
 ## Shushu object
 
