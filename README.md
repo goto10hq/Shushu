@@ -193,4 +193,4 @@ If you want to run tests on your own, you have to set `AppSettings.json` or prov
 
 ## License
 
-MIT © [frohikey](http://frohikey.com)
+MIT © [frohikey](http://frohikey.com) / [Goto10 s.r.o.](http://www.goto10.cz)
