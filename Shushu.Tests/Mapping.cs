@@ -40,6 +40,9 @@ namespace Shushu.Tests
 
             [PropertyMapping(Enums.IndexField.Point0)]
             public GeoPoint Location { get; set; }
+
+            [PropertyMapping(Enums.IndexField.Date0)]
+            public DateTime Work { get; set; }
         }
 
         public class Umiko
@@ -77,8 +80,11 @@ namespace Shushu.Tests
 
         [TestMethod]
         public void MappingPoco()
-        {
-            var a = new Aoba { Id = "id-6502", IgnoreMe = false, Title = "Umiko", Tags = new List<string> { "hi", "ho" }, Location = new GeoPoint(130.56, 220.44), Clever = true };
+        {            
+            var now = DateTime.Now;
+            // TODO: ms = 0 ??
+            var dt = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+            var a = new Aoba { Id = "id-6502", IgnoreMe = false, Title = "Umiko", Tags = new List<string> { "hi", "ho" }, Location = new GeoPoint(130.56, 220.44), Clever = true, Work = dt };
 
             var search = a.MapToIndex();
 
@@ -96,7 +102,24 @@ namespace Shushu.Tests
             Assert.AreEqual("ho", search.Tags7[1]);
             Assert.AreEqual(220, search.Number0);
             Assert.AreEqual(3.14, search.Double2);
-            Assert.AreEqual(GeographyPoint.Create(130.56, 220.44), search.Point0);
+            Assert.AreEqual(dt, search.Date0);
+            Assert.AreEqual(GeographyPoint.Create(130.56, 220.44).Latitude, search.Point0.Latitude);
+            Assert.AreEqual(GeographyPoint.Create(130.56, 220.44).Longitude, search.Point0.Longitude);            
+
+            var a2 = search.MapFromIndex<Aoba>();
+
+            Assert.AreEqual("id-6502", a2.Id);
+            Assert.AreEqual("Umiko", a2.Title);
+            Assert.AreEqual(null, a2.DoNotIgnoreMe);
+            Assert.AreEqual(true, a2.Clever);
+            Assert.AreEqual(2, a2.Tags.Count);
+            Assert.AreEqual("ho", a2.Tags[1]);
+            Assert.AreEqual(220, a2.Iq);
+            Assert.AreEqual(3.14, a2.Money);
+            Assert.AreEqual(dt, a2.Work);
+            Assert.AreEqual(new GeoPoint(130.56, 220.44).Coordinates[0], a2.Location.Coordinates[0]);
+            Assert.AreEqual(new GeoPoint(130.56, 220.44).Coordinates[1], a2.Location.Coordinates[1]);
+            Assert.AreEqual(new GeoPoint(130.56, 220.44).Type, a2.Location.Type);
         }
 
         [TestMethod]

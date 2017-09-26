@@ -61,8 +61,22 @@ namespace Shushu
                         @value = GeographyPoint.Create(gp.Coordinates[0], gp.Coordinates[1]);
                         shushu.GetType().GetTypeInfo().GetProperty(pm.IndexField.ToString())?.SetValue(shushu, @value);
                     }
-                    else
+                    else if (pm.IndexField == Enums.IndexField.Date0 ||
+                        pm.IndexField == Enums.IndexField.Date1 ||
+                        pm.IndexField == Enums.IndexField.Date2 ||
+                        pm.IndexField == Enums.IndexField.Date3 ||
+                        pm.IndexField == Enums.IndexField.Date4)
                     {
+                        var dt = value.ToDateTime();
+
+                        if (dt.HasValue)
+                        {
+                            var dto = new DateTimeOffset(dt.Value);
+                            shushu.GetType().GetTypeInfo().GetProperty(pm.IndexField.ToString())?.SetValue(shushu, dto);
+                        }
+                    }
+                    else
+                    {                        
                         shushu.GetType().GetTypeInfo().GetProperty(pm.IndexField.ToString())?.SetValue(shushu, @value);
                     }
                 }
@@ -120,6 +134,29 @@ namespace Shushu
                     {
                         @value = GeographyPoint.Create(gp.Coordinates[0], gp.Coordinates[1]);
                         obj.GetType().GetTypeInfo().GetProperty(pm.Property)?.SetValue(obj, @value);
+                    }
+                    else if (pm.IndexField == Enums.IndexField.Date0 ||
+                        pm.IndexField == Enums.IndexField.Date1 ||
+                        pm.IndexField == Enums.IndexField.Date2 ||
+                        pm.IndexField == Enums.IndexField.Date3 ||
+                        pm.IndexField == Enums.IndexField.Date4)
+                    {
+                        var dt = value.ToDateTime();
+
+                        if (dt.HasValue)
+                        {
+                            var dto = new DateTime?(dt.Value);
+                            obj.GetType().GetTypeInfo().GetProperty(pm.Property)?.SetValue(obj, dto);
+                        }
+                    }
+                    else if (pm.IndexField == Enums.IndexField.Point0)
+                    {
+                        var p = value as dynamic;
+                        if (p != null)
+                        {
+                            var np = new GeoPoint(p.Latitude, p.Longitude);
+                            obj.GetType().GetTypeInfo().GetProperty(pm.Property)?.SetValue(obj, np);
+                        }                        
                     }
                     else
                     {

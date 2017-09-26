@@ -30,12 +30,12 @@
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Shushu.Tokens.GeoPoint"/> class.
-        /// </summary>
-        /// <param name="long">Long.</param>
+        /// </summary>        
         /// <param name="lat">Lat.</param>
-        public GeoPoint(double @long, double lat)
+        /// /// <param name="long">Long.</param>
+        public GeoPoint(double lat, double @long)
         {
-            Coordinates = new[] { @long, lat };            
+            Coordinates = new[] { lat, @long };            
         }        
     }
 }
