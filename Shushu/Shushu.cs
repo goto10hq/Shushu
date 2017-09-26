@@ -12,10 +12,7 @@ namespace Shushu
     /// Shushu.
     /// </summary>
     public class Shushu
-    {
-        // escaping special chars
-        // + - && || ! ( ) { } [ ] ^ " ~ * ? : \ /
-
+    {        
         /// <summary>
         /// The size of the batch.
         /// </summary>

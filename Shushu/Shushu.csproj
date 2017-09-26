@@ -25,8 +25,4 @@
     <PackageReference Include="Sushi2" Version="1.0.4" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Mapper\" />
-  </ItemGroup>
 </Project>
