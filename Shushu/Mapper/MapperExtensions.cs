@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace Shushu.Mapper
+namespace Shushu
 {
     public static class MapperExtensions
     {
         static readonly List<string> _tokens = new List<string>
             {
+                "\\",
                 "+",
                 "-",
                 "&&",
@@ -22,8 +23,7 @@ namespace Shushu.Mapper
                 "~",
                 "*",
                 "?",
-                ":",
-                "\\",
+                ":",                
                 "/"
             };
 
@@ -33,7 +33,7 @@ namespace Shushu.Mapper
                 return string.Empty;
 
             foreach (var token in _tokens)
-                text = text.Replace(token, "\\" + token);
+                text = text.Replace(token, @"\" + token);
 
             return text;
         }
