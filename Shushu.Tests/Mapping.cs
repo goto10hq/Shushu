@@ -28,7 +28,10 @@ namespace Shushu.Tests
 
             [PropertyMapping(Enums.IndexField.Text0)]
             public string Title { get; set; }
-            
+
+            [PropertyMapping(Enums.IndexField.Text1)]
+            public string AutoTitle => Title?.ToLower() ?? "?";
+
             [PropertyMapping(Enums.IndexField.Tags7)]
             public List<string> Tags { get; set; }
 

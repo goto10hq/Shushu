@@ -160,7 +160,13 @@ namespace Shushu
                     }
                     else
                     {
-                        obj.GetType().GetTypeInfo().GetProperty(pm.Property)?.SetValue(obj, @value);
+                        var prop = obj.GetType().GetTypeInfo().GetProperty(pm.Property);
+
+                        if (prop != null &&
+                            prop.GetSetMethod() != null)
+                        {
+                            obj.GetType().GetTypeInfo().GetProperty(pm.Property)?.SetValue(obj, @value);
+                        }
                     }
                 }
             }
