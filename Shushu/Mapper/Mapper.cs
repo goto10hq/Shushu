@@ -75,6 +75,22 @@ namespace Shushu
                             shushu.GetType().GetTypeInfo().GetProperty(pm.IndexField.ToString())?.SetValue(shushu, dto);
                         }
                     }
+                    else if (pm.IndexField == Enums.IndexField.Number0 ||
+                             pm.IndexField == Enums.IndexField.Number1 ||
+                             pm.IndexField == Enums.IndexField.Number2 ||
+                             pm.IndexField == Enums.IndexField.Number3 ||
+                             pm.IndexField == Enums.IndexField.Number4 ||
+                             pm.IndexField == Enums.IndexField.Number5 ||
+                             pm.IndexField == Enums.IndexField.Number6 ||
+                             pm.IndexField == Enums.IndexField.Number7 ||
+                             pm.IndexField == Enums.IndexField.Number8 ||
+                             pm.IndexField == Enums.IndexField.Number9)
+                    {
+                        var n = @value.ToInt64();
+
+                        if (n.HasValue)
+                            shushu.GetType().GetTypeInfo().GetProperty(pm.IndexField.ToString())?.SetValue(shushu, n);
+                    }
                     else
                     {                        
                         shushu.GetType().GetTypeInfo().GetProperty(pm.IndexField.ToString())?.SetValue(shushu, @value);
@@ -147,6 +163,27 @@ namespace Shushu
                         {
                             var dto = new DateTime?(dt.Value);
                             obj.GetType().GetTypeInfo().GetProperty(pm.Property)?.SetValue(obj, dto);
+                        }
+                    }
+                    else if (pm.IndexField == Enums.IndexField.Number0 ||
+                             pm.IndexField == Enums.IndexField.Number1 ||
+                             pm.IndexField == Enums.IndexField.Number2 ||
+                             pm.IndexField == Enums.IndexField.Number3 ||
+                             pm.IndexField == Enums.IndexField.Number4 ||
+                             pm.IndexField == Enums.IndexField.Number5 ||
+                             pm.IndexField == Enums.IndexField.Number6 ||
+                             pm.IndexField == Enums.IndexField.Number7 ||
+                             pm.IndexField == Enums.IndexField.Number8 ||
+                             pm.IndexField == Enums.IndexField.Number9)
+                    {
+                        var n = @value.ToInt64();
+
+                        if (n.HasValue)
+                        {
+                            var pi = obj.GetType().GetTypeInfo().GetProperty(pm.Property);
+
+                            if (pi != null)
+                                pi.SetValue(obj, Convert.ChangeType(n, pi.PropertyType));
                         }
                     }
                     else if (pm.IndexField == Enums.IndexField.Point0)

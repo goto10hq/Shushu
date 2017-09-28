@@ -218,52 +218,52 @@ namespace Shushu.Tokens
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public int? Number0 { get; set; }
+        public Int64? Number0 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public int? Number1 { get; set; }
+        public Int64? Number1 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public int? Number2 { get; set; }
+        public Int64? Number2 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public int? Number3 { get; set; }
+        public Int64? Number3 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public int? Number4 { get; set; }
+        public Int64? Number4 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public int? Number5 { get; set; }
+        public Int64? Number5 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public int? Number6 { get; set; }
+        public Int64? Number6 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public int? Number7 { get; set; }
+        public Int64? Number7 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public int? Number8 { get; set; }
+        public Int64? Number8 { get; set; }
 
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public int? Number9 { get; set; }
+        public Int64? Number9 { get; set; }
 
         [IsFilterable]
         [IsSortable]
