@@ -107,6 +107,7 @@ namespace Shushu.Tests
             Assert.AreEqual(2, search.Tags7.Count);
             Assert.AreEqual("ho", search.Tags7[1]);
             Assert.AreEqual(220, search.Number0);
+            Assert.AreEqual(120, search.Number1);
             Assert.AreEqual(3.14, search.Double2);
             Assert.AreEqual(dt, search.Date0);
             Assert.AreEqual(GeographyPoint.Create(130.56, 220.44).Latitude, search.Point0.Latitude);
@@ -121,6 +122,7 @@ namespace Shushu.Tests
             Assert.AreEqual(2, a2.Tags.Count);
             Assert.AreEqual("ho", a2.Tags[1]);
             Assert.AreEqual(220, a2.Iq);
+            Assert.AreEqual(120, a2.RealIq);
             Assert.AreEqual(3.14, a2.Money);
             Assert.AreEqual(dt, a2.Work);
             Assert.AreEqual(new GeoPoint(130.56, 220.44).Coordinates[0], a2.Location.Coordinates[0]);

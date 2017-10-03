@@ -176,14 +176,13 @@ namespace Shushu
                              pm.IndexField == Enums.IndexField.Number8 ||
                              pm.IndexField == Enums.IndexField.Number9)
                     {
-                        var n = @value.ToInt64();
+                        var pi = obj.GetType().GetTypeInfo().GetProperty(pm.Property);
 
-                        if (n.HasValue)
+                        if (pi != null)
                         {
-                            var pi = obj.GetType().GetTypeInfo().GetProperty(pm.Property);
-
-                            if (pi != null)
-                                pi.SetValue(obj, Convert.ChangeType(n, pi.PropertyType));
+                            Type t = Nullable.GetUnderlyingType(pi.PropertyType) ?? pi.PropertyType;
+                            object safeValue = (value == null) ? null : Convert.ChangeType(value, t);
+                            pi.SetValue(obj, safeValue);                            
                         }
                     }
                     else if (pm.IndexField == Enums.IndexField.Point0)
