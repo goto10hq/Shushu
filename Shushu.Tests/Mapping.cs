@@ -41,6 +41,9 @@ namespace Shushu.Tests
             [PropertyMapping(Enums.IndexField.Number0)]
             public int Iq { get; set; } = 220;
 
+            [PropertyMapping(Enums.IndexField.Number1)]
+            public int? RealIq { get; set; } = 120;
+
             [PropertyMapping(Enums.IndexField.Point0)]
             public GeoPoint Location { get; set; }
 
