@@ -12,7 +12,7 @@ namespace Shushu
     /// Shushu.
     /// </summary>
     public class Shushu
-    {        
+    {
         /// <summary>
         /// The size of the batch.
         /// </summary>
@@ -42,7 +42,7 @@ namespace Shushu
             var idx = _serviceClient.Indexes.List().Indexes.FirstOrDefault(x => x.Name.Equals(index));
 
             if (idx == null)
-                CreateIndex();            
+                CreateIndex();
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Shushu
         /// <param name="document">Document.</param>
         /// <param name="merge">If set to <c>true</c> merge otherwise just upload.</param>
         /// <typeparam name="T">The document type.</typeparam>
-        public void IndexDocument<T>(T document, bool merge = true) where T: class
+        public void IndexDocument<T>(T document, bool merge = true) where T : class
         {
             AsyncTools.RunSync(() => IndexDocumentAsync(document, merge));
         }
@@ -79,7 +79,7 @@ namespace Shushu
         /// <param name="document">Document.</param>
         /// <param name="merge">If set to <c>true</c> merge otherwise just upload.</param>
         /// <typeparam name="T">The document type.</typeparam>
-        public async Task IndexDocumentAsync<T>(T document, bool merge = true) where T: class
+        public async Task IndexDocumentAsync<T>(T document, bool merge = true) where T : class
         {
             var documents = new List<ShushuIndex> { document.MapToIndex() };
 
@@ -141,7 +141,7 @@ namespace Shushu
         /// <param name="documents">The list of documents.</param>
         /// <param name="merge">If set to <c>true</c> merge otherwise just upload.</param>
         /// <typeparam name="T">The document type.</typeparam>
-        public void IndexDocuments<T>(IList<T> documents, bool merge = true) where T: class
+        public void IndexDocuments<T>(IList<T> documents, bool merge = true) where T : class
         {
             AsyncTools.RunSync(() => IndexDocumentsAsync(documents, merge));
         }
@@ -152,7 +152,7 @@ namespace Shushu
         /// <param name="documents">The list of documents.</param>
         /// <param name="merge">If set to <c>true</c> merge otherwise just upload.</param>
         /// <typeparam name="T">The document type.</typeparam>
-        public async Task IndexDocumentsAsync<T>(IList<T> documents, bool merge = true) where T: class
+        public async Task IndexDocumentsAsync<T>(IList<T> documents, bool merge = true) where T : class
         {
             var max = documents.Count();
 
@@ -163,7 +163,7 @@ namespace Shushu
                 for (var i2 = 0; i2 < MaxBatchSize && i + i2 < max; i2++)
                 {
                     var item = documents[i + i2].MapToIndex();
-                    items.Add(item);    
+                    items.Add(item);
                 }
 
                 if (merge)
@@ -248,17 +248,17 @@ namespace Shushu
 
             var documentSearchResult = new DocumentSearchResult<T>
             {
-                 ContinuationToken = originalSearchResult.ContinuationToken,
-                 Count = originalSearchResult.Count,
-                 Coverage = originalSearchResult.Coverage,
-                 Facets = originalSearchResult.Facets,
+                ContinuationToken = originalSearchResult.ContinuationToken,
+                Count = originalSearchResult.Count,
+                Coverage = originalSearchResult.Coverage,
+                Facets = originalSearchResult.Facets,
             };
 
             if (originalSearchResult != null)
             {
                 var searchResults = new List<SearchResult<T>>();
 
-                foreach(var result in originalSearchResult.Results)
+                foreach (var result in originalSearchResult.Results)
                 {
                     var newResult = new SearchResult<T>
                     {
@@ -280,7 +280,7 @@ namespace Shushu
         {
             var result = _serviceClient.Indexes.List();
             var indexes = result.Indexes;
-            
+
             var definition = new Index
             {
                 Name = _index,
@@ -288,6 +288,6 @@ namespace Shushu
             };
 
             return _serviceClient.Indexes.Create(definition);
-        }        
+        }
     }
 }

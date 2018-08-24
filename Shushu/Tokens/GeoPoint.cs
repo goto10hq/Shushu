@@ -4,7 +4,7 @@
     /// Geo point.
     /// </summary>
     /// <remarks>
-    /// Since GeographyPoint can not be serialized we use this. 
+    /// Since GeographyPoint can not be serialized we use this.
     /// Since this one can.
     /// </remarks>
     public class GeoPoint
@@ -22,20 +22,20 @@
         public double[] Coordinates { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Shushu.Tokens.GeoPoint"/> class.
+        /// Ctor.
         /// </summary>
         public GeoPoint()
-        {            
+        {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Shushu.Tokens.GeoPoint"/> class.
-        /// </summary>        
+        /// Ctor.
+        /// </summary>
         /// <param name="lat">Lat.</param>
         /// /// <param name="long">Long.</param>
         public GeoPoint(double lat, double @long)
         {
-            Coordinates = new[] { lat, @long };            
-        }        
+            Coordinates = new[] { lat, @long };
+        }
     }
 }
