@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.Azure.Search.Models;
 using System.Collections.Generic;
 using Shushu.Tokens;
+using Momo.Tokens;
 
 namespace Shushu
 {
@@ -18,14 +19,15 @@ namespace Shushu
         /// </summary>
         /// <remarks>Note that you can only include up to 1000 documents (or 16 MB) in a single indexing request</remarks>
         const int MaxBatchSize = 1000;
-        readonly string _indexKey = Enums.IndexField.Id.ToString().ToCamelCase();
-        readonly SearchServiceClient _serviceClient;
+
+        string _indexKey = Enums.IndexField.Id.ToString().ToCamelCase();
+        SearchServiceClient _serviceClient;
         SearchIndexClient _searchClient;
         SearchIndexClient _indexClient;
-        readonly string _index;
+        string _index;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Shushu.Shushu"/> class.
+        /// Ctor.
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="serviceApiKey">Service API key.</param>
@@ -33,13 +35,41 @@ namespace Shushu
         /// <param name="index">Index.</param>
         public Shushu(string name, string serviceApiKey, string searchApiKey, string index)
         {
-            _index = index;
+            if (name == null)
+                throw new System.ArgumentNullException(nameof(name));
 
-            _serviceClient = new SearchServiceClient(name, new SearchCredentials(serviceApiKey));
-            _searchClient = new SearchIndexClient(name, index, new SearchCredentials(searchApiKey));
-            _indexClient = new SearchIndexClient(name, index, new SearchCredentials(serviceApiKey));
+            if (serviceApiKey == null)
+                throw new System.ArgumentNullException(nameof(serviceApiKey));
 
-            var idx = _serviceClient.Indexes.List().Indexes.FirstOrDefault(x => x.Name.Equals(index));
+            if (searchApiKey == null)
+                throw new System.ArgumentNullException(nameof(searchApiKey));
+
+            if (index == null)
+                throw new System.ArgumentNullException(nameof(index));
+
+            InitClients(new ShushuConfiguration(name, serviceApiKey, serviceApiKey, index));
+        }
+
+        /// <summary>
+        /// Ctor.
+        /// </summary>
+        /// <param name="shushuConfiguration">Shushu configuration</param>
+        public Shushu(IShushuConfiguration shushuConfiguration)
+        {
+            if (shushuConfiguration == null)
+                throw new System.ArgumentNullException(nameof(shushuConfiguration));
+
+            InitClients(shushuConfiguration);
+        }
+
+        void InitClients(IShushuConfiguration shushuConfiguration)
+        {
+            _index = shushuConfiguration.Index;
+            _serviceClient = new SearchServiceClient(shushuConfiguration.Name, new SearchCredentials(shushuConfiguration.ServiceApiKey));
+            _searchClient = new SearchIndexClient(shushuConfiguration.Name, shushuConfiguration.Index, new SearchCredentials(shushuConfiguration.SearchApiKey));
+            _indexClient = new SearchIndexClient(shushuConfiguration.Name, shushuConfiguration.Index, new SearchCredentials(shushuConfiguration.ServiceApiKey));
+
+            var idx = _serviceClient.Indexes.List().Indexes.FirstOrDefault(x => x.Name.Equals(shushuConfiguration.Index));
 
             if (idx == null)
                 CreateIndex();
@@ -244,7 +274,7 @@ namespace Shushu
         /// <typeparam name="T">The type of object.</typeparam>
         public async Task<DocumentSearchResult<T>> SearchDocumentsAsync<T>(string searchText, SearchParameters searchParameters) where T : class, new()
         {
-            var originalSearchResult = await _searchClient.Documents.SearchAsync<ShushuIndex>(searchText, searchParameters.MapSearchParameters<T>());
+            var originalSearchResult = await _searchClient.Documents.SearchAsync<ShushuIndex>(searchText, searchParameters.MapSearchParameters<T>()).ConfigureAwait(false);
 
             var documentSearchResult = new DocumentSearchResult<T>
             {
