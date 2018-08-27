@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.1.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+    <PackageReference Include="Momo.Tokens" Version="1.0.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
     <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
   </ItemGroup>
@@ -25,9 +26,8 @@
 
   <Target Name="CopyToOut" BeforeTargets="BeforeBuild">
     <Copy SourceFiles="AppSettings.json" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
-  </Target>  
+  </Target>
   <Target Name="CopyToOutOnPublish" AfterTargets="Publish">
     <Copy SourceFiles="AppSettings.json" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="true" />
   </Target>
-
 </Project>
