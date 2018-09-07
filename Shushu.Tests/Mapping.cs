@@ -11,6 +11,13 @@ namespace Shushu.Tests
     [TestClass]
     public class Mapping
     {
+        public enum Color
+        {
+            Red = 0,
+            Green = 1,
+            Blue = 2
+        }
+
         [ClassMapping(Enums.IndexField.Entity, "myproject/aoba")]
         [ClassMapping(Enums.IndexField.Flag8, true)]
         public class Aoba
@@ -43,6 +50,9 @@ namespace Shushu.Tests
 
             [PropertyMapping(Enums.IndexField.Number1)]
             public int? RealIq { get; set; } = 120;
+
+            [PropertyMapping(Enums.IndexField.Number2)]
+            public Color Color { get; set; } = Color.Blue;
 
             [PropertyMapping(Enums.IndexField.Point0)]
             public GeoPoint Location { get; set; }
@@ -86,7 +96,7 @@ namespace Shushu.Tests
 
         [TestMethod]
         public void MappingPoco()
-        {            
+        {
             var now = DateTime.Now;
             // TODO: ms = 0 ??
             var dt = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
@@ -108,10 +118,11 @@ namespace Shushu.Tests
             Assert.AreEqual("ho", search.Tags7[1]);
             Assert.AreEqual(220, search.Number0);
             Assert.AreEqual(120, search.Number1);
+            Assert.AreEqual((Int64)(Int32)Color.Blue, search.Number2);
             Assert.AreEqual(3.14, search.Double2);
             Assert.AreEqual(dt, search.Date0);
             Assert.AreEqual(GeographyPoint.Create(130.56, 220.44).Latitude, search.Point0.Latitude);
-            Assert.AreEqual(GeographyPoint.Create(130.56, 220.44).Longitude, search.Point0.Longitude);            
+            Assert.AreEqual(GeographyPoint.Create(130.56, 220.44).Longitude, search.Point0.Longitude);
 
             var a2 = search.MapFromIndex<Aoba>();
 
@@ -160,12 +171,12 @@ namespace Shushu.Tests
             var search = poco.MapToIndex();
         }
 
-        [TestMethod]        
+        [TestMethod]
         public void TestSearchParameterMappingsForOrderBy()
         {
             var p = new SearchParameters
-            {                
-                OrderBy = new List<string>{ "@Iq", "@Location", "foo" }                
+            {
+                OrderBy = new List<string> { "@Iq", "@Location", "foo" }
             };
 
             p = p.MapSearchParameters<Aoba>();
@@ -245,12 +256,12 @@ namespace Shushu.Tests
         {
             var p = new SearchParameters
             {
-                Filter = "entity eq 'something' and @Title eq 'test'",                
+                Filter = "entity eq 'something' and @Title eq 'test'",
             };
 
             p = p.MapSearchParameters<Aoba>();
 
-            Assert.AreEqual("entity eq 'something' and text0 eq 'test'", p.Filter);            
+            Assert.AreEqual("entity eq 'something' and text0 eq 'test'", p.Filter);
         }
 
         [TestMethod]

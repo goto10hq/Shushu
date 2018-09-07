@@ -89,10 +89,21 @@ namespace Shushu
                         var n = @value.ToInt64();
 
                         if (n.HasValue)
+                        {
                             shushu.GetType().GetTypeInfo().GetProperty(pm.IndexField.ToString())?.SetValue(shushu, n);
+                        }
+                        else if (@value.GetType().IsEnum &&
+                            value != null)
+                        {
+                            var ty = @value.GetType();
+                            var e = (Int32)Enum.Parse(ty, @value.ToString());
+                            var e2 = e.ToInt64();
+
+                            shushu.GetType().GetTypeInfo().GetProperty(pm.IndexField.ToString())?.SetValue(shushu, e2);
+                        }
                     }
                     else
-                    {                        
+                    {
                         shushu.GetType().GetTypeInfo().GetProperty(pm.IndexField.ToString())?.SetValue(shushu, @value);
                     }
                 }
@@ -181,8 +192,17 @@ namespace Shushu
                         if (pi != null)
                         {
                             Type t = Nullable.GetUnderlyingType(pi.PropertyType) ?? pi.PropertyType;
-                            object safeValue = (value == null) ? null : Convert.ChangeType(value, t);
-                            pi.SetValue(obj, safeValue);                            
+
+                            if (t.IsEnum)
+                            {
+                                var e = Enum.Parse(t, @value.ToString());
+                                pi.SetValue(obj, e);
+                            }
+                            else
+                            {
+                                object safeValue = (value == null) ? null : Convert.ChangeType(value, t);
+                                pi.SetValue(obj, safeValue);
+                            }
                         }
                     }
                     else if (pm.IndexField == Enums.IndexField.Point0)
@@ -192,7 +212,7 @@ namespace Shushu
                         {
                             var np = new GeoPoint(p.Latitude, p.Longitude);
                             obj.GetType().GetTypeInfo().GetProperty(pm.Property)?.SetValue(obj, np);
-                        }                        
+                        }
                     }
                     else
                     {
