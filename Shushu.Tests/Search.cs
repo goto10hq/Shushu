@@ -5,6 +5,7 @@ using System.IO;
 using System.Collections.Generic;
 using Microsoft.Azure.Search.Models;
 using System.Threading;
+using Shushu.Tokens;
 
 namespace Shushu.Tests
 {
@@ -13,7 +14,7 @@ namespace Shushu.Tests
     {
         Shushu _shushu;
 
-        [ClassMapping(Enums.IndexField.Entity, "shushu")]        
+        [ClassMapping(Enums.IndexField.Entity, "shushu")]
         public class Shu
         {
             [PropertyMapping(Enums.IndexField.Id)]
@@ -82,6 +83,12 @@ namespace Shushu.Tests
             Assert.AreEqual("3", shu.Id);
             Assert.AreEqual("aoba", shu.Name);
             Assert.AreEqual(140, shu.Iq);
+
+            var shuEntity = _shushu.GetDocument<ShushuEntity>("3");
+
+            Assert.AreEqual("3", shuEntity.Id);
+            Assert.AreEqual("aoba", shuEntity.Text0);
+            Assert.AreEqual(140, shuEntity.Number0);
         }
 
         [TestMethod]
@@ -167,6 +174,7 @@ namespace Shushu.Tests
         public void Cleanup()
         {
             _shushu.DeleteIndex();
+            _shushu.Dispose();
         }
     }
 }

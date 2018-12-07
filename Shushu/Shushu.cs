@@ -6,14 +6,17 @@ using Microsoft.Azure.Search.Models;
 using System.Collections.Generic;
 using Shushu.Tokens;
 using Momo.Tokens;
+using System;
 
 namespace Shushu
 {
     /// <summary>
     /// Shushu.
     /// </summary>
-    public class Shushu
+    public class Shushu : IDisposable
     {
+        bool _disposed;
+
         /// <summary>
         /// The size of the batch.
         /// </summary>
@@ -89,7 +92,7 @@ namespace Shushu
         /// <returns>The index.</returns>
         public async Task DeleteIndexAsync()
         {
-            await _serviceClient.Indexes.DeleteAsync(_index);
+            await _serviceClient.Indexes.DeleteAsync(_index).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -116,12 +119,12 @@ namespace Shushu
             if (merge)
             {
                 var batch = IndexBatch.MergeOrUpload(documents);
-                await _indexClient.Documents.IndexAsync(batch);
+                await _indexClient.Documents.IndexAsync(batch).ConfigureAwait(false);
             }
             else
             {
                 var batch = IndexBatch.Upload(documents);
-                await _indexClient.Documents.IndexAsync(batch);
+                await _indexClient.Documents.IndexAsync(batch).ConfigureAwait(false);
             }
         }
 
@@ -142,7 +145,7 @@ namespace Shushu
         public async Task DeleteDocumentAsync(string id)
         {
             var batch = IndexBatch.Delete(_indexKey, new List<string> { id });
-            await _indexClient.Documents.IndexAsync(batch);
+            await _indexClient.Documents.IndexAsync(batch).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -162,7 +165,7 @@ namespace Shushu
         public async Task DeleteDocumentsAsync(IEnumerable<string> ids)
         {
             var batch = IndexBatch.Delete(_indexKey, ids);
-            await _indexClient.Documents.IndexAsync(batch);
+            await _indexClient.Documents.IndexAsync(batch).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -199,12 +202,12 @@ namespace Shushu
                 if (merge)
                 {
                     var batch = IndexBatch.MergeOrUpload(items);
-                    await _indexClient.Documents.IndexAsync(batch);
+                    await _indexClient.Documents.IndexAsync(batch).ConfigureAwait(false);
                 }
                 else
                 {
                     var batch = IndexBatch.Upload(items);
-                    await _indexClient.Documents.IndexAsync(batch);
+                    await _indexClient.Documents.IndexAsync(batch).ConfigureAwait(false);
                 }
             }
         }
@@ -225,7 +228,7 @@ namespace Shushu
         /// <returns>The number of all documents in index.</returns>
         public async Task<long> CountAllDocumentsAsync()
         {
-            var result = await _searchClient.Documents.CountAsync(null);
+            var result = await _searchClient.Documents.CountAsync(null).ConfigureAwait(false);
             return result;
         }
 
@@ -248,7 +251,7 @@ namespace Shushu
         /// <typeparam name="T">The type of object.</typeparam>
         public async Task<T> GetDocumentAsync<T>(string key) where T : class, new()
         {
-            var shushu = await _searchClient.Documents.GetAsync<ShushuIndex>(key);
+            var shushu = await _searchClient.Documents.GetAsync<ShushuIndex>(key).ConfigureAwait(false);
 
             return shushu.MapFromIndex<T>();
         }
@@ -318,6 +321,37 @@ namespace Shushu
             };
 
             return _serviceClient.Indexes.Create(definition);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                _serviceClient.Dispose();
+                _serviceClient = null;
+
+                _searchClient.Dispose();
+                _searchClient = null;
+
+                _indexClient.Dispose();
+                _indexClient = null;
+            }
+
+            _disposed = true;
+        }
+
+        ~Shushu()
+        {
+            Dispose(false);
         }
     }
 }

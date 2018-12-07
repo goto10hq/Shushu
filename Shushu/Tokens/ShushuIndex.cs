@@ -19,35 +19,35 @@ namespace Shushu.Tokens
 
         [IsFilterable]
         public string Entity { get; set; }
-                
+
         [IsSearchable]
         [IsSortable]
         [Analyzer("standardasciifolding.lucene")]
-        [IsFilterable]        
+        [IsFilterable]
         public string Text0 { get; set; }
 
         [IsSearchable]
         [IsSortable]
         [Analyzer("standardasciifolding.lucene")]
-        [IsFilterable]        
+        [IsFilterable]
         public string Text1 { get; set; }
 
         [IsSearchable]
         [IsSortable]
         [Analyzer("standardasciifolding.lucene")]
-        [IsFilterable]        
+        [IsFilterable]
         public string Text2 { get; set; }
 
         [IsSearchable]
         [IsSortable]
         [Analyzer("standardasciifolding.lucene")]
-        [IsFilterable]        
+        [IsFilterable]
         public string Text3 { get; set; }
 
         [IsSearchable]
         [IsSortable]
-        [Analyzer("standardasciifolding.lucene")]        
-        [IsFilterable]        
+        [Analyzer("standardasciifolding.lucene")]
+        [IsFilterable]
         public string Text4 { get; set; }
 
         [IsSearchable]
@@ -164,7 +164,7 @@ namespace Shushu.Tokens
         [IsFilterable]
         [IsFacetable]
         public DateTimeOffset? Date4 { get; set; }
-        
+
         [IsSearchable]
         [IsFilterable]
         [IsFacetable]
@@ -214,7 +214,7 @@ namespace Shushu.Tokens
         [IsFilterable]
         [IsFacetable]
         public List<string> Tags9 { get; set; }
-        
+
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
