@@ -21,11 +21,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Azure.Search" Version="5.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.1.2" />
-    <PackageReference Include="Microsoft.Rest.ClientRuntime.Azure" Version="3.3.15" />
-    <PackageReference Include="Momo.Tokens" Version="1.1.0" />
-    <PackageReference Include="Sushi2" Version="1.2.12" />
+    <PackageReference Include="Microsoft.Azure.Search" Version="5.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Rest.ClientRuntime.Azure" Version="3.3.18" />
+    <PackageReference Include="Momo.Tokens" Version="1.2.1" />
+    <PackageReference Include="Sushi2" Version="1.2.14" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
   </ItemGroup>
 </Project>
