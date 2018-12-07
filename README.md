@@ -3,23 +3,24 @@
 
 # Shushu
 
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Latest Version on NuGet](https://img.shields.io/nuget/v/Shushu.svg?style=flat-square)](https://www.nuget.org/packages/Shushu/)
-[![NuGet](https://img.shields.io/nuget/dt/Shushu.svg?style=flat-square)](https://www.nuget.org/packages/Shushu/)
-[![Visual Studio Team services](https://img.shields.io/vso/build/frohikey/c3964e53-4bf3-417a-a96e-661031ef862f/119.svg?style=flat-square)](https://github.com/goto10hq/Shushu)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
+[![Latest Version on NuGet](https://img.shields.io/nuget/v/Shushu.svg)](https://www.nuget.org/packages/Shushu/)
+[![NuGet](https://img.shields.io/nuget/dt/Shushu.svg)](https://www.nuget.org/packages/Shushu/)
+[![.NETStandard 2.0](https://img.shields.io/badge/.NETStandard-2.0-blue.svg)](https://github.com/dotnet/standard/blob/master/docs/versions/netstandard2.0.md)
+[![Build status](https://frohikey.visualstudio.com/Goto10/_apis/build/status/NUGET/shushu)](https://frohikey.visualstudio.com/Goto10/_build/latest?definitionId=119)
 
 ## Preface
 
-__Azure Search__ has kinda not super firendly teirs for situations when you have zillions of various document types organized in relatively small batches. 
+__Azure Search__ has kinda not super friendly tiers for situations when you have zillions of various document types organized in relatively small batches. 
 In such cases it would becomes quite handy to have a possibility to just have one __universal index__. Unfortunately it's quite cumbersome to make mappings like:
 
 ```
 Title -> Text0, Author -> Text1, ...
 ```
 
-Here comes __Shushu__ to smooth things up.
+Here comes __Shushu__ to make things much more easier for you.
 
-## One index for all
+## One index to rule'em all
 
 [ShushuIndex](https://github.com/goto10hq/Shushu/blob/master/Shushu/Tokens/ShushuIndex.cs) is the main index.
 
@@ -168,6 +169,12 @@ var shu = shushu.GetDocument<Shu>("1");
 
 You can try mapping: `var poco = shushu.MapFromIndex<Poco>();`
 
+There's also handy POCO ShushuEntity if you want just map all the properties.
+
+```csharp
+var full = shushu.GetDocument<Tokens.ShushuEntity>("1");
+```
+
 And of course the most import part... searching itself. Again search parameters are replaced accordingly just use `@Property`.
 
 ```csharp
@@ -186,10 +193,6 @@ var result = _shushu.SearchDocuments<Shu>("*", sp);
 Azure Search can be tricky because indexing itself takes some time. That's why I was forced to use `Thread.Sleep()`.
 
 If you want to run tests on your own, you have to set `AppSettings.json` or provide `secrets` named `shushu`.
-
-## TODO
-
-- check types of properties being indexed (is conversion valid?)
 
 ## License
 
