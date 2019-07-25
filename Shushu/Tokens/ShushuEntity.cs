@@ -214,6 +214,6 @@ namespace Shushu.Tokens
         public bool? Flag9 { get; set; }
 
         [PropertyMapping(Enums.IndexField.Point0)]
-        public GeographyPoint Point0 { get; set; }
+        public GeographyPoint Point0 { get; set; }        
     }
 }
