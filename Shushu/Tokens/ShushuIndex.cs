@@ -368,5 +368,17 @@ namespace Shushu.Tokens
         [IsFilterable]
         [IsSortable]        
         public GeographyPoint Point0 { get; set; }
+
+        [IsFilterable]
+        [IsSortable]        
+        public IList<ComplexItem> Complex0 { get; set; }
+
+        [IsFilterable]
+        [IsSortable]        
+        public IList<ComplexItem> Complex1 { get; set; }
+
+        [IsFilterable]
+        [IsSortable]        
+        public IList<ComplexItem> Complex2 { get; set; }        
     }
 }

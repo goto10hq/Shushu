@@ -5,6 +5,7 @@ using Shushu.Attributes;
 using Shushu.Tokens;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Shushu.Tests
 {
@@ -59,8 +60,11 @@ namespace Shushu.Tests
 
             [PropertyMapping(Enums.IndexField.Date0)]
             public DateTime Work { get; set; }
-        }
 
+            [PropertyMapping(Enums.IndexField.Complex0)]
+            public IList<ComplexItem> Bees { get; set; }
+        }
+        
         public class Umiko
         {
             public string Test { get; set; }
@@ -100,7 +104,18 @@ namespace Shushu.Tests
             var now = DateTime.Now;
             // TODO: ms = 0 ??
             var dt = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
-            var a = new Aoba { Id = "id-6502", IgnoreMe = false, Title = "Umiko", Tags = new List<string> { "hi", "ho" }, Location = new GeoPoint(130.56, 220.44), Clever = true, Work = dt };
+            var a = new Aoba 
+            { 
+                Id = "id-6502", 
+                IgnoreMe = false, 
+                Title = "Umiko", 
+                Tags = new List<string> { "hi", "ho" }, 
+                Location = new GeoPoint(130.56, 220.44), 
+                Clever = true, 
+                Work = dt,
+                Bees = new List<ComplexItem> { new ComplexItem { Text = "Maya", Number = 100, Flag = false }, 
+                    new ComplexItem { Text = "Hornet", Number = 130, Flag = true } }
+            };
 
             var search = a.MapToIndex();
 
@@ -123,6 +138,12 @@ namespace Shushu.Tests
             Assert.AreEqual(dt, search.Date0);
             Assert.AreEqual(GeographyPoint.Create(130.56, 220.44).Latitude, search.Point0.Latitude);
             Assert.AreEqual(GeographyPoint.Create(130.56, 220.44).Longitude, search.Point0.Longitude);
+            Assert.AreEqual("Maya", search.Complex0.First().Text);
+            Assert.AreEqual(100, search.Complex0.First().Number);
+            Assert.AreEqual(false, search.Complex0.First().Flag);
+            Assert.AreEqual("Hornet", search.Complex0.Last().Text);
+            Assert.AreEqual(130, search.Complex0.Last().Number);
+            Assert.AreEqual(true, search.Complex0.Last().Flag);
 
             var a2 = search.MapFromIndex<Aoba>();
 
@@ -139,6 +160,12 @@ namespace Shushu.Tests
             Assert.AreEqual(new GeoPoint(130.56, 220.44).Coordinates[0], a2.Location.Coordinates[0]);
             Assert.AreEqual(new GeoPoint(130.56, 220.44).Coordinates[1], a2.Location.Coordinates[1]);
             Assert.AreEqual(new GeoPoint(130.56, 220.44).Type, a2.Location.Type);
+            Assert.AreEqual("Maya", a2.Bees.First().Text);
+            Assert.AreEqual(100, a2.Bees.First().Number);
+            Assert.AreEqual(false, a2.Bees.First().Flag);
+            Assert.AreEqual("Hornet", a2.Bees.Last().Text);
+            Assert.AreEqual(130, a2.Bees.Last().Number);
+            Assert.AreEqual(true, a2.Bees.Last().Flag);
         }
 
         [TestMethod]
