@@ -317,46 +317,56 @@ namespace Shushu.Tokens
 
         [IsFilterable]
         [IsFacetable]
+        [IsSortable]
         public bool? Flag0 { get; set; }
 
         [IsFilterable]
         [IsFacetable]
+        [IsSortable]
         public bool? Flag1 { get; set; }
 
         [IsFilterable]
         [IsFacetable]
+        [IsSortable]
         public bool? Flag2 { get; set; }
 
         [IsFilterable]
         [IsFacetable]
+        [IsSortable]
         public bool? Flag3 { get; set; }
 
         [IsFilterable]
         [IsFacetable]
+        [IsSortable]
         public bool? Flag4 { get; set; }
 
         [IsFilterable]
         [IsFacetable]
+        [IsSortable]
         public bool? Flag5 { get; set; }
 
         [IsFilterable]
         [IsFacetable]
+        [IsSortable]
         public bool? Flag6 { get; set; }
 
         [IsFilterable]
         [IsFacetable]
+        [IsSortable]
         public bool? Flag7 { get; set; }
 
         [IsFilterable]
         [IsFacetable]
+        [IsSortable]
         public bool? Flag8 { get; set; }
 
         [IsFilterable]
         [IsFacetable]
+        [IsSortable]
         public bool? Flag9 { get; set; }
 
         [IsFilterable]
-        [IsSortable]
+        [IsSortable]        
         public GeographyPoint Point0 { get; set; }
     }
 }

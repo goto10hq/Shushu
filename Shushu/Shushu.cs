@@ -277,36 +277,25 @@ namespace Shushu
         /// <typeparam name="T">The type of object.</typeparam>
         public async Task<DocumentSearchResult<T>> SearchDocumentsAsync<T>(string searchText, SearchParameters searchParameters) where T : class, new()
         {
-            var originalSearchResult = await _searchClient.Documents.SearchAsync<ShushuIndex>(searchText, searchParameters.MapSearchParameters<T>()).ConfigureAwait(false);
-
-            var documentSearchResult = new DocumentSearchResult<T>
-            {
-                ContinuationToken = originalSearchResult.ContinuationToken,
-                Count = originalSearchResult.Count,
-                Coverage = originalSearchResult.Coverage,
-                Facets = originalSearchResult.Facets,
-            };
+            var originalSearchResult = await _searchClient.Documents.SearchAsync<ShushuIndex>(searchText, searchParameters.MapSearchParameters<T>()).ConfigureAwait(false);            
+            var newSearchResult = new List<SearchResult<T>>();
 
             if (originalSearchResult != null)
-            {
-                var searchResults = new List<SearchResult<T>>();
-
+            {                
                 foreach (var result in originalSearchResult.Results)
-                {
-                    var newResult = new SearchResult<T>
-                    {
-                        Highlights = result.Highlights,
-                        Score = result.Score,
-                        Document = result.Document.MapFromIndex<T>()
-                    };
-
-                    searchResults.Add(newResult);
-                }
-
-                documentSearchResult.Results = searchResults;
+                {                    
+                    var newResult = new SearchResult<T>(result.Document.MapFromIndex<T>(), result.Score, result.Highlights);
+                                        
+                    newSearchResult.Add(newResult);
+                }                
             }
 
-            return documentSearchResult;
+            return new DocumentSearchResult<T>(newSearchResult,
+                originalSearchResult.Count,
+                originalSearchResult.Coverage,
+                originalSearchResult.Facets,
+                originalSearchResult.ContinuationToken
+            );            
         }
 
         Index CreateIndex()

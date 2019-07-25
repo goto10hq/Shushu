@@ -77,7 +77,17 @@
             Flag7 = 607,
             Flag8 = 608,
             Flag9 = 609,
-            Point0 = 700
+            Point0 = 700,
+            Complex0 = 800,
+            Complex1 = 801,
+            Complex2 = 802,
+            Complex3 = 803,
+            Complex4 = 804,
+            Complex5 = 805,
+            Complex6 = 806,
+            Complex7 = 807,
+            Complex8 = 808,
+            Complex9 = 809,
         }
     }
 }
