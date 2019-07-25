@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Shushu</PackageId>
     <Title>Shushu</Title>
-    <Version>2.3.0</Version>
+    <Version>2.4.0</Version>
     <Authors>frohikey</Authors>
     <PackageLicenseUrl>https://github.com/goto10hq/Shushu/blob/master/LICENSE</PackageLicenseUrl>
     <Owners>Goto10</Owners>
@@ -12,12 +12,12 @@
     <Summary>Azure Search on friendly steroids.</Summary>
     <Description>Azure Search on friendly steroids.</Description>
     <PackageTags>azure azure-search</PackageTags>
-    <Copyright>Copyright (c) 2018 Goto10 s.r.o.</Copyright>
+    <Copyright>Copyright (c) 2019 Goto10 s.r.o.</Copyright>
     <Company>Goto10</Company>
     <RepositoryUrl>https://github.com/goto10hq/Shushu</RepositoryUrl>
     <PackageIconUrl>https://github.com/goto10hq/Shushu/raw/master/shushu-icon.png</PackageIconUrl>
-    <AssemblyVersion>2.3.0.0</AssemblyVersion>
-    <FileVersion>2.3.0.0</FileVersion>
+    <AssemblyVersion>2.4.0.0</AssemblyVersion>
+    <FileVersion>2.4.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
