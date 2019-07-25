@@ -24,6 +24,8 @@ Here comes __Shushu__ to make things much more easier for you.
 
 [ShushuIndex](https://github.com/goto10hq/Shushu/blob/master/Shushu/Tokens/ShushuIndex.cs) is the main index.
 
+### SushuIndex
+
 ```csharp
 [IsFilterable]
 public string Id { get; set; }
@@ -70,6 +72,24 @@ public bool? Flag9 { get; set; }
 [IsFilterable]
 [IsSortable]
 public GeographyPoint Point0 { get; set; }
+
+[IsFilterable]
+[IsSortable]        
+public IList<ComplexItem> Complex0 { get; set; }
+public IList<ComplexItem> Complex1 { get; set; }
+public IList<ComplexItem> Complex2 { get; set; }
+```
+
+### ComplexItem
+
+```csharp
+public string Text { get; set; }
+public DateTimeOffset? Date { get; set; }
+public IList<string> Tags { get; set; }
+public long? Number { get; set; }
+public double? Double { get; set; }
+public bool? Flag { get; set; }
+public GeographyPoint Point { get; set; }
 ```
 
 ## Shushu object
