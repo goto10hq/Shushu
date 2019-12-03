@@ -298,11 +298,37 @@ namespace Shushu
             );            
         }
 
-        Index CreateIndex()
+        /// <summary>
+        /// Continues searching documents.
+        /// </summary>
+        /// <returns>The documents.</returns>
+        /// <param name="searchContinuationToken">Continuation token.</param>
+        /// <typeparam name="T">The type of object.</typeparam>
+        public async Task<DocumentSearchResult<T>> ContinueSearchDocumentsAsync<T>(SearchContinuationToken searchContinuationToken) where T : class, new()
         {
-            var result = _serviceClient.Indexes.List();
-            var indexes = result.Indexes;
+            var originalSearchResult = await _searchClient.Documents.ContinueSearchAsync<ShushuIndex>(searchContinuationToken).ConfigureAwait(false);
+            var newSearchResult = new List<SearchResult<T>>();
 
+            if (originalSearchResult != null)
+            {
+                foreach (var result in originalSearchResult.Results)
+                {
+                    var newResult = new SearchResult<T>(result.Document.MapFromIndex<T>(), result.Score, result.Highlights);
+
+                    newSearchResult.Add(newResult);
+                }
+            }
+
+            return new DocumentSearchResult<T>(newSearchResult,
+                originalSearchResult.Count,
+                originalSearchResult.Coverage,
+                originalSearchResult.Facets,
+                originalSearchResult.ContinuationToken
+            );
+        }
+
+        Index CreateIndex()
+        {                        
             var definition = new Index
             {
                 Name = _index,
