@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Shushu</PackageId>
     <Title>Shushu</Title>
-    <Version>2.5.0</Version>
+    <Version>2.5.1</Version>
     <Authors>frohikey</Authors>
     <PackageLicenseUrl>https://github.com/goto10hq/Shushu/blob/master/LICENSE</PackageLicenseUrl>
     <Owners>Goto10</Owners>
@@ -16,13 +16,13 @@
     <Company>Goto10</Company>
     <RepositoryUrl>https://github.com/goto10hq/Shushu</RepositoryUrl>
     <PackageIconUrl>https://github.com/goto10hq/Shushu/raw/master/shushu-icon.png</PackageIconUrl>
-    <AssemblyVersion>2.5.0.0</AssemblyVersion>
-    <FileVersion>2.5.0.0</FileVersion>
+    <AssemblyVersion>2.5.1.0</AssemblyVersion>
+    <FileVersion>2.5.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.Search" Version="10.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.2.0" />
     <PackageReference Include="Microsoft.Rest.ClientRuntime.Azure" Version="3.3.19" />
     <PackageReference Include="Momo.Tokens" Version="1.4.1" />
     <PackageReference Include="Sushi2" Version="1.2.19" />
